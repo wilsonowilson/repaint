@@ -7,46 +7,47 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final layer = TextLayer(
+      offset: Offset(0, 0),
+      style: GoogleFonts.raleway(
+        fontSize: 32,
+        color: Colors.black,
+      ),
+      text: 'Text',
+    );
     return Container(
       height: double.maxFinite,
       width: 300,
       color: Color(0xff1b1b1b),
-      child: ListView.builder(
-          itemCount: 4,
-          itemBuilder: (context, index) {
-            final layer = TextLayer(
-              offset: Offset(0, 0),
-              style: GoogleFonts.lobster(
-                fontSize: 48,
-                color: Colors.black,
-              ),
-              text: 'Hello, world',
-            );
-            return Draggable<TextLayer>(
-              data: layer,
-              feedback: Center(
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    'Hello, world',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-              child: ListTile(
-                onTap: () => context.read<CanvasCubit>().addLayer(layer),
-                title: Text(
-                  'Hello, world',
+      child: ListView(
+        children: [
+          Draggable<TextLayer>(
+            data: layer,
+            feedback: Center(
+              child: Material(
+                color: Colors.transparent,
+                child: Text(
+                  'Text',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontSize: 32,
                   ),
                 ),
               ),
-            );
-          }),
+            ),
+            child: ListTile(
+              onTap: () => context.read<CanvasCubit>().addLayer(layer),
+              title: Text(
+                'Text',
+                style: GoogleFonts.raleway(
+                  color: Colors.white,
+                  fontSize: 32,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -23,8 +23,11 @@ class LayerTargets extends StatelessWidget {
     /// Handle layer additions
     return DragTarget<RLayer>(onAcceptWithDetails: (e) {
       if (e.data is TextLayer) {
-        context.read<CanvasCubit>().addLayer(
-            (e.data as TextLayer).copyWith(offset: _localPosition(e.offset)));
+        final cubit = context.read<CanvasCubit>();
+        final layer = (e.data as TextLayer).copyWith(
+          offset: _localPosition(e.offset),
+        );
+        cubit.addLayer(layer);
       }
     }, builder: (context, objects, _) {
       /// Handle layer position edits

@@ -12,10 +12,11 @@ class CanvasCubit extends Cubit<CanvasState> {
 
   void addLayer(RLayer layer) {
     final layers = state.layers.toList();
-
+    final identityLayer = IdentityLayer(id: Uuid().v4(), data: layer);
     emit(state.copyWith(
-      layers: layers..add(IdentityLayer(id: Uuid().v4(), data: layer)),
+      layers: layers..add(identityLayer),
     ));
+    selectLayer(identityLayer);
   }
 
   void removeLayer(IdentityLayer layer) {

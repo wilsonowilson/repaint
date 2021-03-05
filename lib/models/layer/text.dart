@@ -5,7 +5,7 @@ import 'layer.dart';
 class TextLayer extends RLayer {
   TextLayer({
     this.style,
-    this.size,
+    required this.size,
     required this.offset,
     required this.text,
   });
@@ -14,10 +14,10 @@ class TextLayer extends RLayer {
   final Offset offset;
 
   @override
-  double get opacity => 1;
+  final double opacity = 1;
 
   @override
-  final Size? size;
+  final Size size;
 
   final TextStyle? style;
   final String text;
@@ -29,6 +29,7 @@ class TextLayer extends RLayer {
     Offset? offset,
     TextStyle? style,
     String? text,
+    double? opacity,
     Size? size,
   }) {
     return TextLayer(

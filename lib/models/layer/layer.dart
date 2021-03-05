@@ -6,7 +6,13 @@ import 'package:flutter/material.dart';
 abstract class RLayer extends Equatable {
   Offset get offset;
   double get opacity;
-  Size? get size;
+  Size get size;
+
+  RLayer copyWith({
+    Offset? offset,
+    Size? size,
+    double? opacity,
+  });
 }
 
 class IdentityLayer extends Equatable {

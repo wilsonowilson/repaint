@@ -8,7 +8,7 @@ class PaintLayer extends RLayer {
   PaintLayer({
     this.clippingPath,
     this.shadow,
-    this.size,
+    required this.size,
     required this.offset,
     required this.color,
     required this.borderRadius,
@@ -21,7 +21,7 @@ class PaintLayer extends RLayer {
   double get opacity => 1;
 
   @override
-  final Size? size;
+  final Size size;
 
   final Color color;
   final Path? clippingPath;
@@ -44,6 +44,7 @@ class PaintLayer extends RLayer {
     Size? size,
     Color? color,
     Path? clippingPath,
+    double? opacity,
     BoxShadow? shadow,
     double? borderRadius,
   }) {

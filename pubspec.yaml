@@ -13,10 +13,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   dartz: ^0.10.0-nullsafety.1
   equatable: ^2.0.0
+  file_picker: ^3.0.0
   flutter_bloc: ^7.0.0-nullsafety.3
   google_fonts: ^2.0.0
   layout: ^0.6.1
   mouse_parallax: ^1.1.0
+  file_selector: ^0.8.2
+  file_selector_macos: ^0.0.4
+  universal_platform: ^1.0.0-nullsafety
   provider: ^5.0.0-nullsafety.5
   uuid: ^3.0.1
 

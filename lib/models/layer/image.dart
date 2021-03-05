@@ -5,29 +5,30 @@ import 'layer.dart';
 
 class ImageLayer extends RLayer {
   ImageLayer({
-    this.size,
+    this.data,
+    required this.size,
     required this.offset,
-    required this.data,
   });
 
   @override
   final Offset offset;
 
   @override
-  double get opacity => 1;
+  final double opacity = 1;
 
-  final Uint8List data;
+  final Uint8List? data;
 
   @override
-  final Size? size;
+  final Size size;
 
   @override
   List<Object?> get props => [offset, opacity, data, size];
 
   ImageLayer copyWith({
     Offset? offset,
-    Uint8List? data,
     Size? size,
+    double? opacity,
+    Uint8List? data,
   }) {
     return ImageLayer(
       offset: offset ?? this.offset,

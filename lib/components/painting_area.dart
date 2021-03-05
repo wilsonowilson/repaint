@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/components/layer_targets.dart';
 import 'package:repaint/models/core/canvas.dart';
+import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
 import 'package:repaint/models/layer/text.dart';
 import 'package:repaint/widgets/interactive_canvas_viewer.dart';
@@ -60,23 +61,27 @@ class _GestureCanvasState extends State<GestureCanvas> {
     final canvas = cubit.state.canvas;
     return Listener(
       onPointerSignal: _calculateTranslation,
-      onPointerDown: (_) {
-        FocusScope.of(context).requestFocus(FocusNode());
-        cubit.deselectLayer();
-      },
-      child: Container(
-        color: Color(0xffeaeaea),
-        child: InteractiveCanvasViewer(
-          scale: false,
-          controller: controller,
-          scaleController: scaleController,
-          child: Center(
-            child: LayerTargets(
-              canvasKey: canvasKey,
-              child: CanvasComponent(
-                canvasKey: canvasKey,
-                effectiveCanvasSize: _effectiveCanvasSize,
-                canvas: canvas,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          cubit.deselectLayer();
+        },
+        child: Container(
+          color: Color(0xffeaeaea),
+          child: LayerTargets(
+            canvasKey: canvasKey,
+            child: InteractiveCanvasViewer(
+              scale: false,
+              controller: controller,
+              scaleController: scaleController,
+              child: Center(
+                child: ClipRect(
+                  child: CanvasComponent(
+                    canvasKey: canvasKey,
+                    effectiveCanvasSize: _effectiveCanvasSize,
+                    canvas: canvas,
+                  ),
+                ),
               ),
             ),
           ),
@@ -187,8 +192,77 @@ class CanvasComponent extends StatelessWidget {
         yield TextCanvas(
           identityLayer: identityLayer,
         );
+      } else if (layer is ImageLayer) {
+        yield ImageCanvas(
+          identityLayer: identityLayer,
+        );
       }
     }
+  }
+}
+
+class ImageCanvas extends StatefulWidget {
+  ImageCanvas({
+    Key? key,
+    required this.identityLayer,
+  }) : super(key: key);
+  final IdentityLayer identityLayer;
+
+  @override
+  _ImageCanvasState createState() => _ImageCanvasState();
+}
+
+class _ImageCanvasState extends State<ImageCanvas> {
+  final focusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<CanvasCubit>();
+    final state = cubit.state;
+    final selected = state.selectedLayer.fold(() => null, (a) => a)?.id ==
+        widget.identityLayer.id;
+    final layer = widget.identityLayer.data as ImageLayer;
+    final placeHolder = Container(
+      width: layer.size.width,
+      height: layer.size.height,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: MemoryImage(
+            layer.data!,
+          ),
+        ),
+      ),
+    );
+    return Transform.translate(
+      offset: layer.offset,
+      child: SelectableComponent(
+        layer: widget.identityLayer,
+        isSelected: selected,
+        resizable: true,
+        focusNode: focusNode,
+        child: GestureDetector(
+          onTap: () {
+            if (!selected) {
+              cubit.selectLayer(widget.identityLayer);
+              focusNode.requestFocus();
+            } else {
+              cubit.deselectLayer();
+              focusNode.nextFocus();
+            }
+          },
+          child: Draggable<IdentityLayer>(
+            data: widget.identityLayer,
+            feedback: placeHolder,
+            childWhenDragging: Opacity(
+              opacity: 0.6,
+              child: placeHolder,
+            ),
+            child: placeHolder,
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -215,9 +289,13 @@ class _TextCanvasState extends State<TextCanvas> {
         widget.identityLayer.id;
     final layer = widget.identityLayer.data as TextLayer;
 
-    var placeHolder = Text(
-      layer.text,
-      style: layer.style,
+    var placeHolder = Container(
+      width: layer.size.width,
+      height: layer.size.height,
+      child: Text(
+        layer.text,
+        style: layer.style,
+      ),
     );
 
     return Transform.translate(
@@ -226,6 +304,7 @@ class _TextCanvasState extends State<TextCanvas> {
         layer: widget.identityLayer,
         isSelected: selected,
         focusNode: focusNode,
+        resizable: true,
         child: GestureDetector(
           onTap: () {
             if (!selected) {
@@ -236,21 +315,17 @@ class _TextCanvasState extends State<TextCanvas> {
               focusNode.nextFocus();
             }
           },
-          child: Container(
-            width: layer.size?.width,
-            height: layer.size?.height,
-            child: Draggable<IdentityLayer>(
-              data: widget.identityLayer,
-              childWhenDragging: Opacity(
-                opacity: 0.2,
-                child: placeHolder,
-              ),
-              feedback: Material(
-                color: Colors.transparent,
-                child: placeHolder,
-              ),
+          child: Draggable<IdentityLayer>(
+            data: widget.identityLayer,
+            childWhenDragging: Opacity(
+              opacity: 0.2,
               child: placeHolder,
             ),
+            feedback: Material(
+              color: Colors.transparent,
+              child: placeHolder,
+            ),
+            child: placeHolder,
           ),
         ),
       ),
@@ -260,7 +335,7 @@ class _TextCanvasState extends State<TextCanvas> {
 
 class DeleteIntent extends Intent {}
 
-class SelectableComponent extends StatelessWidget {
+class SelectableComponent extends StatefulWidget {
   const SelectableComponent({
     Key? key,
     this.resizable = false,
@@ -274,10 +349,17 @@ class SelectableComponent extends StatelessWidget {
   final bool isSelected;
   final bool resizable;
   final FocusNode focusNode;
+
+  @override
+  _SelectableComponentState createState() => _SelectableComponentState();
+}
+
+class _SelectableComponentState extends State<SelectableComponent> {
+  double? startingPosition = 0;
   @override
   Widget build(BuildContext context) {
     return FocusableActionDetector(
-      focusNode: focusNode,
+      focusNode: widget.focusNode,
       shortcuts: {
         LogicalKeySet(LogicalKeyboardKey.backspace): DeleteIntent(),
       },
@@ -285,29 +367,31 @@ class SelectableComponent extends StatelessWidget {
         DeleteIntent: CallbackAction(
             onInvoke: (_) => context.read<CanvasCubit>()
               ..deselectLayer()
-              ..removeLayer(layer)),
+              ..removeLayer(widget.layer)),
       },
       child: Stack(
         children: [
-          Container(
-            width: layer.data.size?.width,
-            height: layer.data.size?.height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: isSelected
-                  ? Border.all(
-                      color: Colors.cyanAccent.withOpacity(0.5),
-                      width: 2,
-                    )
-                  : null,
-            ),
-            child: Opacity(
-              opacity: 0,
-              child: child,
+          widget.child,
+          IgnorePointer(
+            ignoring: true,
+            child: Container(
+              width: widget.layer.data.size.width,
+              height: widget.layer.data.size.height,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: widget.isSelected
+                    ? Border.all(
+                        color: Colors.cyanAccent.withOpacity(0.5),
+                        width: 2,
+                      )
+                    : null,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(20),
+              ),
             ),
           ),
-          child,
-          if (resizable) ..._buildPills(context),
+          if (widget.resizable && widget.isSelected) ..._buildPills(context),
         ],
       ),
     );
@@ -315,15 +399,31 @@ class SelectableComponent extends StatelessWidget {
 
   Iterable<Widget> _buildPills(BuildContext context) sync* {
     yield Positioned(
-      left: 0,
+      right: 0,
       top: 0,
       bottom: 0,
       child: Center(
         child: Pill(
           width: 7,
           height: 20,
+          onPanStart: (e) {
+            startingPosition = widget.layer.data.size.width;
+          },
           onPanUpdate: (e) {
-            print(e);
+            final identityLayer = widget.layer;
+            final layer = identityLayer.data;
+
+            final newWidth = startingPosition! + e.localPosition.dx;
+            if (newWidth < 20) return;
+            final newLayer = layer.copyWith(
+              size: Size(
+                newWidth,
+                layer.size.height,
+              ),
+            );
+            context
+                .read<CanvasCubit>()
+                .editLayer(identityLayer.copyWith(data: newLayer));
           },
         ),
       ),
@@ -336,6 +436,25 @@ class SelectableComponent extends StatelessWidget {
         child: Pill(
           width: 20,
           height: 7,
+          onPanStart: (e) {
+            startingPosition = widget.layer.data.size.height;
+          },
+          onPanUpdate: (e) {
+            final identityLayer = widget.layer;
+            final layer = identityLayer.data;
+
+            final newHeight = startingPosition! + e.localPosition.dy;
+            if (newHeight < 20) return;
+            final newLayer = layer.copyWith(
+              size: Size(
+                layer.size.width,
+                newHeight,
+              ),
+            );
+            context
+                .read<CanvasCubit>()
+                .editLayer(identityLayer.copyWith(data: newLayer));
+          },
         ),
       ),
     );
@@ -360,9 +479,9 @@ class Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onPanEnd: onPanEnd,
       onPanStart: onPanStart,
       onPanUpdate: onPanUpdate,
-      onPanEnd: onPanEnd,
       child: Container(
         width: width,
         height: height,
@@ -370,9 +489,7 @@ class Pill extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
-            BoxShadow(
-              blurRadius: 5,
-            ),
+            BoxShadow(blurRadius: 5, color: Colors.black26),
           ],
         ),
       ),

@@ -1,0 +1,28 @@
+name: repaint
+description: A web photo editor built with Flutter
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  bloc: ^7.0.0-nullsafety.3
+  cupertino_icons: ^1.0.2
+  dartz: ^0.10.0-nullsafety.1
+  equatable: ^2.0.0
+  flutter_bloc: ^7.0.0-nullsafety.3
+  google_fonts: ^2.0.0
+  layout: ^0.6.1
+  mouse_parallax: ^1.1.0
+  provider: ^5.0.0-nullsafety.5
+  uuid: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

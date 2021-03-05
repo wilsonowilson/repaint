@@ -29,7 +29,8 @@ class CanvasCubit extends Cubit<CanvasState> {
     final layers = state.layers.toList();
     final current = layers.firstWhere((element) => element.id == layer.id);
     final index = layers.indexOf(current);
-    layers[index] = layer;
+    layers.remove(current);
+    layers.insert(index, layer);
     emit(state.copyWith(layers: layers));
   }
 

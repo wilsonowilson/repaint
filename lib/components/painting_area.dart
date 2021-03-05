@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/components/layer_targets.dart';
@@ -173,53 +174,86 @@ class CanvasComponent extends StatelessWidget {
     final identityLayers = state.layers;
 
     for (final identityLayer in identityLayers) {
-      final selected = state.selectedLayer.fold(() => null, (a) => a)?.id ==
-          identityLayer.id;
-      print(selected);
-      Widget child = SizedBox();
+      // final selected = state.selectedLayer.fold(() => null, (a) => a)?.id ==
+      //     identityLayer.id;
       final layer = identityLayer.data;
 
       if (layer is TextLayer) {
-        final text = Text(
-          layer.text,
-          style: layer.style,
-        );
-        child = Draggable<IdentityLayer>(
-          data: identityLayer,
-          childWhenDragging: Opacity(
-            opacity: 0.2,
-            child: text,
-          ),
-          feedback: Material(
-            color: Colors.transparent,
-            child: text,
-          ),
-          child: text,
+        yield TextCanvas(
+          identityLayer: identityLayer,
         );
       }
-      yield Transform.translate(
-        offset: layer.offset,
-        child: SelectableComponent(
-          layer: identityLayer,
-          isSelected: selected,
-          child: GestureDetector(
-            onTap: () {
-              if (!selected)
-                cubit.selectLayer(identityLayer);
-              else
-                cubit.deselectLayer();
-            },
-            child: Container(
-              width: layer.size?.width,
-              height: layer.size?.height,
-              child: child,
-            ),
-          ),
-        ),
-      );
     }
   }
 }
+
+class TextCanvas extends StatefulWidget {
+  TextCanvas({
+    Key? key,
+    required this.identityLayer,
+  }) : super(key: key);
+  final IdentityLayer identityLayer;
+
+  @override
+  _TextCanvasState createState() => _TextCanvasState();
+}
+
+class _TextCanvasState extends State<TextCanvas> {
+  final focusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final cubit = context.watch<CanvasCubit>();
+    final state = cubit.state;
+    final selected = state.selectedLayer.fold(() => null, (a) => a)?.id ==
+        widget.identityLayer.id;
+    final layer = widget.identityLayer.data as TextLayer;
+
+    var placeHolder = Text(
+      layer.text,
+      style: layer.style,
+    );
+
+    return Transform.translate(
+      offset: layer.offset,
+      child: SelectableComponent(
+        layer: widget.identityLayer,
+        isSelected: selected,
+        focusNode: focusNode,
+        child: GestureDetector(
+          onTap: () {
+            if (!selected) {
+              cubit.selectLayer(widget.identityLayer);
+              focusNode.requestFocus();
+            } else {
+              cubit.deselectLayer();
+              focusNode.nextFocus();
+            }
+          },
+          child: Container(
+            width: layer.size?.width,
+            height: layer.size?.height,
+            child: Draggable<IdentityLayer>(
+              data: widget.identityLayer,
+              childWhenDragging: Opacity(
+                opacity: 0.2,
+                child: placeHolder,
+              ),
+              feedback: Material(
+                color: Colors.transparent,
+                child: placeHolder,
+              ),
+              child: placeHolder,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DeleteIntent extends Intent {}
 
 class SelectableComponent extends StatelessWidget {
   const SelectableComponent({
@@ -227,37 +261,50 @@ class SelectableComponent extends StatelessWidget {
     this.resizable = false,
     required this.layer,
     required this.child,
+    required this.focusNode,
     required this.isSelected,
   }) : super(key: key);
   final Widget child;
   final IdentityLayer layer;
   final bool isSelected;
   final bool resizable;
-
+  final FocusNode focusNode;
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: layer.data.size?.width,
-          height: layer.data.size?.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: isSelected
-                ? Border.all(
-                    color: Colors.cyanAccent.withOpacity(0.5),
-                    width: 2,
-                  )
-                : null,
+    return FocusableActionDetector(
+      focusNode: focusNode,
+      shortcuts: {
+        LogicalKeySet(LogicalKeyboardKey.backspace): DeleteIntent(),
+      },
+      actions: {
+        DeleteIntent: CallbackAction(
+            onInvoke: (_) => context.read<CanvasCubit>()
+              ..deselectLayer()
+              ..removeLayer(layer)),
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: layer.data.size?.width,
+            height: layer.data.size?.height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: isSelected
+                  ? Border.all(
+                      color: Colors.cyanAccent.withOpacity(0.5),
+                      width: 2,
+                    )
+                  : null,
+            ),
+            child: Opacity(
+              opacity: 0,
+              child: child,
+            ),
           ),
-          child: Opacity(
-            opacity: 0,
-            child: child,
-          ),
-        ),
-        child,
-        if (resizable) ..._buildPills(context),
-      ],
+          child,
+          if (resizable) ..._buildPills(context),
+        ],
+      ),
     );
   }
 

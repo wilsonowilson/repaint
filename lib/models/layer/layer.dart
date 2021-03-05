@@ -3,30 +3,26 @@ import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import 'package:repaint/models/layer/image.dart';
-import 'package:repaint/models/layer/paint.dart';
-import 'package:repaint/models/layer/text.dart';
-
 abstract class RLayer extends Equatable {
   Offset get offset;
   double get opacity;
   Size? get size;
 }
 
-class IdentityLayer<T extends RLayer> extends Equatable {
+class IdentityLayer extends Equatable {
   IdentityLayer({
     required this.id,
     required this.data,
   });
 
   final String id;
-  final T data;
+  final RLayer data;
 
-  IdentityLayer<T> copyWith({
+  IdentityLayer copyWith({
     String? id,
-    T? data,
+    RLayer? data,
   }) {
-    return IdentityLayer<T>(
+    return IdentityLayer(
       id: id ?? this.id,
       data: data ?? this.data,
     );

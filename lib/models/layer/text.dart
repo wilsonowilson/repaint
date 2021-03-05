@@ -23,7 +23,7 @@ class TextLayer extends RLayer {
   final String text;
 
   @override
-  List<Object?> get props => [offset, opacity, style, size];
+  List<Object?> get props => [offset, opacity, text, style, size];
 
   TextLayer copyWith({
     Offset? offset,

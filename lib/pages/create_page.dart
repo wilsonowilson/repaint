@@ -13,7 +13,7 @@ class CreatePage extends StatelessWidget {
         RCanvas(
           width: 1080,
           height: 2000,
-          color: Colors.blueGrey.shade900,
+          color: Colors.white,
         ),
       ),
       child: CreatePage(),

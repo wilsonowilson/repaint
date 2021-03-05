@@ -18,7 +18,7 @@ class SideBar extends StatelessWidget {
               offset: Offset(0, 0),
               style: GoogleFonts.lobster(
                 fontSize: 75,
-                color: Colors.white,
+                color: Colors.black,
               ),
               text: 'Hello, world',
             );

@@ -56,9 +56,14 @@ class _GestureCanvasState extends State<GestureCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    final canvas = context.watch<CanvasCubit>().state.canvas;
+    final cubit = context.watch<CanvasCubit>();
+    final canvas = cubit.state.canvas;
     return Listener(
       onPointerSignal: _calculateTranslation,
+      onPointerDown: (_) {
+        FocusScope.of(context).requestFocus(FocusNode());
+        cubit.deselectLayer();
+      },
       child: Container(
         color: Color(0xffeaeaea),
         child: InteractiveCanvasViewer(

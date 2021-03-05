@@ -17,7 +17,7 @@ class SideBar extends StatelessWidget {
             final layer = TextLayer(
               offset: Offset(0, 0),
               style: GoogleFonts.lobster(
-                fontSize: 75,
+                fontSize: 48,
                 color: Colors.black,
               ),
               text: 'Hello, world',

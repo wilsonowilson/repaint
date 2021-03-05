@@ -28,10 +28,15 @@ class CanvasCubit extends Cubit<CanvasState> {
   void editLayer(IdentityLayer layer) {
     final layers = state.layers.toList();
     final current = layers.firstWhere((element) => element.id == layer.id);
+
     final index = layers.indexOf(current);
     layers.remove(current);
     layers.insert(index, layer);
+
     emit(state.copyWith(layers: layers));
+    if (state.selectedLayer.fold(() => null, (a) => a.id) == current.id) {
+      emit(state.copyWith(selectedLayer: some(layer)));
+    }
   }
 
   void editCanvas(RCanvas canvas) {

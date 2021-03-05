@@ -11,7 +11,6 @@ class EditBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
     final cubit = context.watch<CanvasCubit>();
     final state = cubit.state;
     final selectedLayer = state.selectedLayer.fold(() => null, (a) => a);
@@ -28,41 +27,118 @@ class EditBar extends StatelessWidget {
           )
         ],
       ),
-      child: state.selectedLayer.isNone()
-          ? null
-          : Row(
-              children: [
-                if (selectedLayer?.data is TextLayer)
-                  ..._buildTextEditComponents(context, selectedLayer!)
-              ],
+      child: Builder(builder: (context) {
+        if (state.selectedLayer.isNone()) return SizedBox();
+
+        if (selectedLayer?.data is TextLayer)
+          return TextEditBar(
+            selectedLayer: selectedLayer!,
+          );
+
+        return SizedBox();
+      }),
+    );
+  }
+}
+
+class TextEditBar extends StatelessWidget {
+  const TextEditBar({Key? key, required this.selectedLayer}) : super(key: key);
+
+  final IdentityLayer selectedLayer;
+
+  @override
+  Widget build(BuildContext context) {
+    final layer = selectedLayer.data as TextLayer;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+      child: Row(
+        children: [
+          Container(
+            width: 200,
+            child: TextFormField(
+              initialValue: layer.text,
+              maxLines: null,
+              decoration: InputDecoration(
+                filled: true,
+                border: InputBorder.none,
+              ),
+              onFieldSubmitted: (e) {},
+              onChanged: (e) => _editLayerText(context, e),
             ),
+          ),
+          SizedBox(width: 20),
+          TextSizeSelector(),
+        ],
+      ),
     );
   }
 
-  Iterable<Widget> _buildTextEditComponents(
-    BuildContext context,
-    IdentityLayer selectedLayer,
-  ) sync* {
+  void _editLayerText(BuildContext context, String e) {
     final layer = selectedLayer.data as TextLayer;
-    yield Container(
-      width: 200,
-      child: TextFormField(
-        initialValue: layer.text,
-        maxLines: null,
-        decoration: InputDecoration(
-          filled: true,
-          border: InputBorder.none,
-        ),
-        onFieldSubmitted: (e) {},
-        onChanged: (e) {
-          final newLayer = layer.copyWith(text: e);
-          context.read<CanvasCubit>().editLayer(
-                selectedLayer.copyWith(
-                  data: newLayer,
-                ),
-              );
-        },
-      ),
+    final newLayer = layer.copyWith(text: e);
+    context.read<CanvasCubit>().editLayer(
+          selectedLayer.copyWith(
+            data: newLayer,
+          ),
+        );
+  }
+}
+
+class TextSizeSelector extends StatefulWidget {
+  const TextSizeSelector({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _TextSizeSelectorState createState() => _TextSizeSelectorState();
+}
+
+class _TextSizeSelectorState extends State<TextSizeSelector> {
+  static const _avalaibleTextSizes = <double>[
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    72,
+    84,
+    92,
+    124,
+    148,
+  ];
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<CanvasCubit>();
+    final state = cubit.state;
+    final selectedLayer = state.selectedLayer.fold(() => null, (a) => a);
+
+    return DropdownButton<double>(
+      value: (selectedLayer?.data as TextLayer).style?.fontSize,
+      underline: SizedBox(),
+      isDense: true,
+      onChanged: (e) {
+        final layer = selectedLayer!.data as TextLayer;
+        final newLayer = layer.copyWith(
+          style: layer.style?.copyWith(fontSize: e),
+        );
+        context.read<CanvasCubit>().editLayer(
+              selectedLayer.copyWith(
+                data: newLayer,
+              ),
+            );
+      },
+      items: _avalaibleTextSizes
+          .map(
+            (e) => DropdownMenuItem<double>(
+              value: e,
+              child: Text('${e}px'),
+            ),
+          )
+          .toList(),
     );
   }
 }

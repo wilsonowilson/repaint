@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/popup.dart';
@@ -106,14 +107,15 @@ class LayerShadowEditor extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  'Blur Radius',
-                  style: TextStyle(
+                  'BLUR RADIUS',
+                  style: GoogleFonts.raleway(
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(width: 70),
+              SizedBox(width: 55),
               Expanded(
                 child: NumberField(
                   updateValue: 0.1,

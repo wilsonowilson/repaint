@@ -97,10 +97,10 @@ class _NumberIncrementerState extends State<NumberIncrementer> {
               timer?.cancel();
             },
             child: Container(
-              color: Colors.white,
+              color: Colors.blueGrey.shade300,
               child: Icon(
-                Icons.arrow_drop_up,
-                color: Colors.black,
+                Icons.arrow_drop_up_rounded,
+                color: Colors.white,
               ),
             ),
           ),
@@ -122,10 +122,10 @@ class _NumberIncrementerState extends State<NumberIncrementer> {
               timer?.cancel();
             },
             child: Container(
-              color: Colors.white,
+              color: Colors.blueGrey.shade400,
               child: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black,
+                Icons.arrow_drop_down_rounded,
+                color: Colors.white,
               ),
             ),
           ),

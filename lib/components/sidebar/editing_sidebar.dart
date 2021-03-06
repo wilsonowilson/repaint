@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repaint/components/sidebar/image_editor.dart';
 import 'package:repaint/components/sidebar/image_radius_editor.dart';
 import 'package:repaint/components/sidebar/position_editor.dart';
 import 'package:repaint/components/sidebar/shadow_editor.dart';
@@ -13,7 +14,6 @@ import 'package:repaint/components/sidebar/text_decoration_editor.dart';
 import 'package:repaint/components/sidebar/text_font_editor.dart';
 import 'package:repaint/components/sidebar/text_size_editor.dart';
 import 'package:repaint/components/sidebar/text_weight_editor.dart';
-import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
 import 'package:repaint/models/layer/text.dart';
 
@@ -113,9 +113,10 @@ class ImageLayerEditSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final layer = identityLayer.data as ImageLayer;
     return Column(
       children: [
+        ImageEditor(),
+        SizedBox(height: 15),
         SidebarHeading(
           title: 'DIMENSIONS',
           padding: 5,

@@ -32,9 +32,10 @@ class ImageRadiusEditor extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              'Blur Radius',
+              'Radius',
               style: TextStyle(
                 color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),

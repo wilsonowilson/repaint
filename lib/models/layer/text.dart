@@ -5,6 +5,7 @@ import 'layer.dart';
 class TextLayer extends RLayer {
   TextLayer({
     this.align,
+    this.shadow = const Shadow(),
     required this.style,
     required this.font,
     required this.size,
@@ -20,14 +21,29 @@ class TextLayer extends RLayer {
 
   @override
   final Size size;
+  @override
+  final Shadow shadow;
   // Used to match google fonts
   final String font;
+
+  // TODO: split style
   final TextStyle style;
+
   final TextAlign? align;
+
   final String text;
 
   @override
-  List<Object?> get props => [offset, opacity, text, style, size, align, font];
+  List<Object?> get props => [
+        offset,
+        opacity,
+        text,
+        style,
+        size,
+        align,
+        font,
+        shadow,
+      ];
 
   TextLayer copyWith({
     Offset? offset,
@@ -37,6 +53,7 @@ class TextLayer extends RLayer {
     Size? size,
     TextAlign? align,
     String? font,
+    Shadow? shadow,
   }) {
     return TextLayer(
       offset: offset ?? this.offset,
@@ -45,6 +62,7 @@ class TextLayer extends RLayer {
       size: size ?? this.size,
       align: align ?? this.align,
       font: font ?? this.font,
+      shadow: shadow ?? this.shadow,
     );
   }
 }

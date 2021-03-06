@@ -377,6 +377,9 @@ class _TextCanvasState extends State<TextCanvas> {
           color: layer.style.color,
           fontStyle: layer.style.fontStyle,
           decoration: layer.style.decoration,
+          shadows: [
+            layer.shadow,
+          ],
         ),
         textAlign: layer.align,
       ),
@@ -384,31 +387,23 @@ class _TextCanvasState extends State<TextCanvas> {
 
     return Transform.translate(
       offset: layer.offset,
-      child: SelectableComponent(
+      child: DraggableLayer(
         layer: widget.identityLayer,
-        isSelected: selected,
-        focusNode: focusNode,
-        resizable: true,
-        child: GestureDetector(
-          onTap: () {
-            if (!selected) {
-              cubit.selectLayer(widget.identityLayer);
-              focusNode.requestFocus();
-            } else {
-              cubit.deselectLayer();
-              focusNode.nextFocus();
-            }
-          },
-          child: Draggable<IdentityLayer>(
-            data: widget.identityLayer,
-            childWhenDragging: Opacity(
-              opacity: 0.2,
-              child: placeHolder,
-            ),
-            feedback: Material(
-              color: Colors.transparent,
-              child: placeHolder,
-            ),
+        child: SelectableComponent(
+          layer: widget.identityLayer,
+          isSelected: selected,
+          focusNode: focusNode,
+          resizable: true,
+          child: GestureDetector(
+            onTap: () {
+              if (!selected) {
+                cubit.selectLayer(widget.identityLayer);
+                focusNode.requestFocus();
+              } else {
+                cubit.deselectLayer();
+                focusNode.nextFocus();
+              }
+            },
             child: placeHolder,
           ),
         ),

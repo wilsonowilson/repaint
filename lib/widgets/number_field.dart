@@ -8,10 +8,12 @@ class NumberField extends StatelessWidget {
     Key? key,
     required this.onValue,
     required this.text,
+    this.updateValue = 1.0,
   }) : super(key: key);
 
   final ValueChanged<double> onValue;
   final String text;
+  final double updateValue;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class NumberField extends StatelessWidget {
               ),
             ),
             NumberIncrementer(
+              updateValue: updateValue,
               onIncrement: (e) {
                 onValue(e.toDouble());
               },
@@ -61,9 +64,11 @@ class NumberIncrementer extends StatefulWidget {
     Key? key,
     required this.onIncrement,
     required this.onDecrement,
+    required this.updateValue,
   }) : super(key: key);
-  final ValueChanged<int> onIncrement;
-  final ValueChanged<int> onDecrement;
+  final ValueChanged<double> onIncrement;
+  final ValueChanged<double> onDecrement;
+  final double updateValue;
 
   @override
   _NumberIncrementerState createState() => _NumberIncrementerState();
@@ -78,11 +83,11 @@ class _NumberIncrementerState extends State<NumberIncrementer> {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              widget.onIncrement(1);
+              widget.onIncrement(widget.updateValue);
             },
             onTapDown: (TapDownDetails details) {
               timer = Timer.periodic(Duration(milliseconds: 20), (t) {
-                widget.onIncrement(1);
+                widget.onIncrement(widget.updateValue);
               });
             },
             onTapUp: (TapUpDetails details) {
@@ -103,11 +108,11 @@ class _NumberIncrementerState extends State<NumberIncrementer> {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              widget.onIncrement(-1);
+              widget.onDecrement(widget.updateValue);
             },
             onTapDown: (TapDownDetails details) {
               timer = Timer.periodic(Duration(milliseconds: 50), (t) {
-                widget.onDecrement(1);
+                widget.onDecrement(widget.updateValue);
               });
             },
             onTapUp: (TapUpDetails details) {

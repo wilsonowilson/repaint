@@ -89,9 +89,11 @@ class SidebarPanel extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            children: children,
+          child: Scrollbar(
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              children: children,
+            ),
           ),
         ),
       ],

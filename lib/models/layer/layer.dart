@@ -7,11 +7,13 @@ abstract class RLayer extends Equatable {
   Offset get offset;
   double get opacity;
   Size get size;
+  Shadow get shadow;
 
   RLayer copyWith({
     Offset? offset,
     Size? size,
     double? opacity,
+    Shadow? shadow,
   });
 }
 

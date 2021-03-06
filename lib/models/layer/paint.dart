@@ -7,12 +7,12 @@ import 'layer.dart';
 class PaintLayer extends RLayer {
   PaintLayer({
     this.clippingPath,
-    this.shadow,
+    this.shadow = const Shadow(),
     required this.size,
     required this.offset,
     required this.color,
     required this.borderRadius,
-  });
+  }) : assert(shadow is BoxShadow);
 
   @override
   final Offset offset;
@@ -24,8 +24,12 @@ class PaintLayer extends RLayer {
   final Size size;
 
   final Color color;
+
   final Path? clippingPath;
-  final BoxShadow? shadow;
+
+  @override
+  final Shadow shadow;
+
   final double borderRadius;
 
   @override
@@ -45,7 +49,7 @@ class PaintLayer extends RLayer {
     Color? color,
     Path? clippingPath,
     double? opacity,
-    BoxShadow? shadow,
+    Shadow? shadow,
     double? borderRadius,
   }) {
     return PaintLayer(

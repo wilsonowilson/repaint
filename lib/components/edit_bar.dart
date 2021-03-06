@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/models/layer/layer.dart';
@@ -71,7 +70,7 @@ class TextEditBar extends StatelessWidget {
           // ),
           SizedBox(width: 20),
           TextSizeSelector(),
-          TextFontSelector(),
+          // TextFontSelector(),
         ],
       ),
     );
@@ -135,85 +134,4 @@ class _TextSizeSelectorState extends State<TextSizeSelector> {
           .toList(),
     );
   }
-}
-
-class TextFontSelector extends StatefulWidget {
-  const TextFontSelector({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  _TextFontSelectorState createState() => _TextFontSelectorState();
-}
-
-class _TextFontSelectorState extends State<TextFontSelector> {
-  static final _availableFontFamilies = <FontFamily>[
-    FontFamily('Raleway', GoogleFonts.raleway()),
-    FontFamily('Roboto', GoogleFonts.roboto()),
-    FontFamily('Playfair Display', GoogleFonts.playfairDisplay()),
-    FontFamily('Montserrat', GoogleFonts.montserrat()),
-    FontFamily('Lobster', GoogleFonts.lobster()),
-    FontFamily('Oswald', GoogleFonts.oswald()),
-    FontFamily('Abril Fatface', GoogleFonts.abrilFatface()),
-    FontFamily('Roboto Condensed', GoogleFonts.robotoCondensed()),
-    FontFamily('Merriweather', GoogleFonts.merriweather()),
-  ];
-  @override
-  Widget build(BuildContext context) {
-    final cubit = context.watch<CanvasCubit>();
-    final state = cubit.state;
-    final selectedLayer = state.selectedLayer.fold(() => null, (a) => a);
-    final selectFamily = (selectedLayer?.data as TextLayer).style?.asFontFamily;
-    return DropdownButton<FontFamily>(
-      value: selectFamily,
-      underline: SizedBox(),
-      isDense: true,
-      onChanged: (e) {
-        final layer = selectedLayer!.data as TextLayer;
-        final newLayer = layer.copyWith(
-            style: e?.style.copyWith(
-          fontSize: layer.style?.fontSize,
-          color: layer.style?.color,
-        ));
-        context.read<CanvasCubit>().editLayer(
-              selectedLayer.copyWith(
-                data: newLayer,
-              ),
-            );
-      },
-      items: _availableFontFamilies
-          .map(
-            (e) => DropdownMenuItem<FontFamily>(
-              value: e,
-              child: Text(e.name, style: e.style),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-class FontFamily {
-  final String name;
-  final TextStyle style;
-
-  FontFamily(this.name, this.style);
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is FontFamily &&
-        (o.name.contains(name) || o.style.fontFamily == style.fontFamily);
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ style.hashCode;
-
-  @override
-  String toString() => '$name';
-}
-
-extension FontFamilyExtension on TextStyle {
-  FontFamily get asFontFamily => FontFamily(fontFamily ?? '', this);
 }

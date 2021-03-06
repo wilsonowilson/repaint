@@ -3,6 +3,7 @@ import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/image_picker.dart';
 import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
+import 'package:repaint/models/layer/paint.dart';
 import 'package:repaint/models/layer/text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,9 +59,9 @@ class LayerTargets extends StatelessWidget {
       },
       onAcceptWithDetails: (e) async {
         if (!_withinBounds(e.offset, e.data)) return;
-        if (e.data is TextLayer) {
+        if (e.data is TextLayer || e.data is PaintLayer) {
           final cubit = context.read<CanvasCubit>();
-          final layer = (e.data as TextLayer).copyWith(
+          final layer = (e.data).copyWith(
             offset: _localPosition(e.offset),
           );
           cubit.addLayer(layer);

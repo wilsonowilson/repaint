@@ -8,6 +8,7 @@ import 'package:repaint/components/sidebar/editing_sidebar.dart';
 import 'package:repaint/components/sidebar/sidebar_heading.dart';
 import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
+import 'package:repaint/models/layer/paint.dart';
 import 'package:repaint/models/layer/text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,6 +40,7 @@ class SideBar extends StatelessWidget {
           if (!isEditing) ...[
             TextLayerTemplates(),
             ImageLayerTemplates(),
+            PaintLayerTemplates(),
           ] else
             EditingSidebar(),
         ],
@@ -203,6 +205,51 @@ class ImageLayerTemplates extends StatelessWidget {
             layer: backgroundImage,
             title: 'Background',
             icon: FontAwesomeIcons.solidImage,
+          ),
+        ]),
+      ],
+    );
+  }
+}
+
+class PaintLayerTemplates extends StatelessWidget {
+  const PaintLayerTemplates({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final defaultPaintLayer = PaintLayer(
+      size: Size(200, 200),
+      offset: Offset.zero,
+      color: Colors.blue,
+      borderRadius: 0,
+    );
+    final circlePaintLayer = PaintLayer(
+      size: Size(200, 200),
+      offset: Offset.zero,
+      color: Colors.blue,
+      shape: BoxShape.circle,
+      borderRadius: 0,
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        SidebarHeading(title: 'SHAPES'),
+        const SizedBox(height: 8),
+        _buildElementGrid([
+          DraggableComponent(
+            title: 'Square',
+            layer: defaultPaintLayer,
+            icon: FontAwesomeIcons.squareFull,
+          ),
+          DraggableComponent(
+            title: 'Circle',
+            layer: circlePaintLayer,
+            icon: FontAwesomeIcons.solidCircle,
           ),
         ]),
       ],

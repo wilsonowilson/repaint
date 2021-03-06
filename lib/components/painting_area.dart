@@ -11,6 +11,7 @@ import 'package:repaint/components/layer_targets.dart';
 import 'package:repaint/models/core/canvas.dart';
 import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
+import 'package:repaint/models/layer/paint.dart';
 import 'package:repaint/models/layer/text.dart';
 import 'package:repaint/widgets/interactive_canvas_viewer.dart';
 
@@ -217,6 +218,10 @@ class CanvasComponent extends StatelessWidget {
         yield ImageCanvas(
           identityLayer: identityLayer,
         );
+      } else if (layer is PaintLayer) {
+        yield PaintCanvas(
+          identityLayer: identityLayer,
+        );
       }
     }
   }
@@ -420,12 +425,90 @@ class _TextCanvasState extends State<TextCanvas> {
   }
 }
 
+class PaintCanvas extends StatefulWidget {
+  PaintCanvas({
+    Key? key,
+    required this.identityLayer,
+  }) : super(key: key);
+  final IdentityLayer identityLayer;
+
+  @override
+  _PaintCanvasState createState() => _PaintCanvasState();
+}
+
+class _PaintCanvasState extends State<PaintCanvas> {
+  final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      focusNode.requestFocus();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final cubit = context.watch<CanvasCubit>();
+    final state = cubit.state;
+    final selected = state.selectedLayer.fold(() => null, (a) => a)?.id ==
+        widget.identityLayer.id;
+
+    final layer = widget.identityLayer.data as PaintLayer;
+    var placeHolder = Container(
+      width: layer.size.width,
+      height: layer.size.height,
+      decoration: BoxDecoration(
+          color: layer.color,
+          shape: layer.shape,
+          borderRadius: layer.shape == BoxShape.circle
+              ? null
+              : BorderRadius.circular(layer.borderRadius),
+          boxShadow: [
+            BoxShadow(
+              offset: layer.shadow.offset,
+              blurRadius: layer.shadow.blurRadius,
+              color: layer.shadow.color,
+            ),
+          ]),
+    );
+
+    return Transform.translate(
+      offset: layer.offset,
+      child: DraggableLayer(
+        layer: widget.identityLayer,
+        child: SelectableComponent(
+          layer: widget.identityLayer,
+          isSelected: selected,
+          focusNode: focusNode,
+          resizable: true,
+          scaleProportionally: layer.shape == BoxShape.circle,
+          child: GestureDetector(
+            onTap: () {
+              if (!selected) {
+                cubit.selectLayer(widget.identityLayer);
+                focusNode.requestFocus();
+              } else {
+                cubit.deselectLayer();
+                focusNode.nextFocus();
+              }
+            },
+            child: placeHolder,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class DeleteIntent extends Intent {}
 
 class SelectableComponent extends StatefulWidget {
   const SelectableComponent({
     Key? key,
     this.resizable = false,
+    this.scaleProportionally = false,
     required this.layer,
     required this.child,
     required this.focusNode,
@@ -435,6 +518,7 @@ class SelectableComponent extends StatefulWidget {
   final IdentityLayer layer;
   final bool isSelected;
   final bool resizable;
+  final bool scaleProportionally;
   final FocusNode focusNode;
 
   @override
@@ -505,7 +589,7 @@ class _SelectableComponentState extends State<SelectableComponent> {
             final newLayer = layer.copyWith(
               size: Size(
                 newWidth,
-                layer.size.height,
+                widget.scaleProportionally ? newWidth : layer.size.height,
               ),
             );
             context
@@ -535,7 +619,7 @@ class _SelectableComponentState extends State<SelectableComponent> {
 
             final newLayer = layer.copyWith(
               size: Size(
-                layer.size.width,
+                widget.scaleProportionally ? newHeight : layer.size.width,
                 newHeight,
               ),
             );

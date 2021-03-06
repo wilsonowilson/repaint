@@ -8,11 +8,12 @@ class PaintLayer extends RLayer {
   PaintLayer({
     this.clippingPath,
     this.shadow = const Shadow(),
+    this.shape = BoxShape.rectangle,
     required this.size,
     required this.offset,
     required this.color,
     required this.borderRadius,
-  }) : assert(shadow is BoxShadow);
+  });
 
   @override
   final Offset offset;
@@ -32,6 +33,8 @@ class PaintLayer extends RLayer {
 
   final double borderRadius;
 
+  final BoxShape shape;
+
   @override
   List<Object?> get props => [
         size,
@@ -41,6 +44,7 @@ class PaintLayer extends RLayer {
         clippingPath,
         shadow,
         borderRadius,
+        shape,
       ];
 
   PaintLayer copyWith({
@@ -51,6 +55,7 @@ class PaintLayer extends RLayer {
     double? opacity,
     Shadow? shadow,
     double? borderRadius,
+    BoxShape? shape,
   }) {
     return PaintLayer(
       offset: offset ?? this.offset,
@@ -59,6 +64,7 @@ class PaintLayer extends RLayer {
       clippingPath: clippingPath ?? this.clippingPath,
       shadow: shadow ?? this.shadow,
       borderRadius: borderRadius ?? this.borderRadius,
+      shape: shape ?? this.shape,
     );
   }
 }

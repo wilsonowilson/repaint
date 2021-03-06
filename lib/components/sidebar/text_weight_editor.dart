@@ -60,7 +60,15 @@ class TextWeightEditor extends StatelessWidget {
                     (e) => PopupMenuItem(
                       height: 30,
                       value: e,
-                      child: Center(child: Text(e.name)),
+                      child: Center(
+                        child: Text(
+                          e.name,
+                          style: GoogleFonts.getFont(
+                            'Raleway',
+                            fontWeight: e.weight,
+                          ),
+                        ),
+                      ),
                     ),
                   )
                   .toList();
@@ -75,7 +83,8 @@ class TextWeightEditor extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 selectedWeight.name,
-                style: TextStyle(
+                style: GoogleFonts.getFont(
+                  'Raleway',
                   color: Colors.white,
                   fontWeight: selectedWeight.weight,
                 ),

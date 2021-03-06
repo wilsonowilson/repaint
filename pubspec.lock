@@ -153,6 +153,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.0-nullsafety.3"
+  flutter_colorpicker:
+    dependency: "direct main"
+    description:
+      name: flutter_colorpicker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0-nullsafety.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -422,4 +429,4 @@ packages:
     version: "0.2.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.22.0"
+  flutter: ">=1.24.0-10.2.pre"

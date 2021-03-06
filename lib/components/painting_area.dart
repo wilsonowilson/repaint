@@ -521,6 +521,7 @@ class _SelectableComponentState extends State<SelectableComponent> {
 
             final newHeight = startingPosition! + e.localPosition.dy;
             if (newHeight < 20) return;
+
             final newLayer = layer.copyWith(
               size: Size(
                 layer.size.width,

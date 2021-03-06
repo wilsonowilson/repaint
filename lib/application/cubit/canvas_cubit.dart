@@ -2,7 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:repaint/models/core/canvas.dart';
+import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
+import 'package:repaint/models/layer/text.dart';
 import 'package:uuid/uuid.dart';
 
 part 'canvas_state.dart';

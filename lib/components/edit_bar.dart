@@ -56,35 +56,25 @@ class TextEditBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 18.0),
       child: Row(
         children: [
-          Container(
-            width: 200,
-            child: TextFormField(
-              initialValue: layer.text,
-              maxLines: null,
-              decoration: InputDecoration(
-                filled: true,
-                border: InputBorder.none,
-              ),
-              onFieldSubmitted: (e) {},
-              onChanged: (e) => _editLayerText(context, e),
-            ),
-          ),
+          // Container(
+          //   width: 200,
+          //   child: TextFormField(
+          //     initialValue: layer.text,
+          //     maxLines: null,
+          //     decoration: InputDecoration(
+          //       filled: true,
+          //       border: InputBorder.none,
+          //     ),
+          //     onFieldSubmitted: (e) {},
+          //     onChanged: (e) => _editLayerText(context, e),
+          //   ),
+          // ),
           SizedBox(width: 20),
           TextSizeSelector(),
           TextFontSelector(),
         ],
       ),
     );
-  }
-
-  void _editLayerText(BuildContext context, String e) {
-    final layer = selectedLayer.data as TextLayer;
-    final newLayer = layer.copyWith(text: e);
-    context.read<CanvasCubit>().editLayer(
-          selectedLayer.copyWith(
-            data: newLayer,
-          ),
-        );
   }
 }
 

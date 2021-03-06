@@ -19,6 +19,12 @@ class CanvasState extends Equatable {
   @override
   List<Object> get props => [layers, selectedLayer, canvas];
 
+  bool get isInEditMode => selectedLayer.isSome();
+  IdentityLayer get selectedOption {
+    assert(isInEditMode, 'Only call this method if in edit mode');
+    return selectedLayer.fold(() => null, (a) => a)!;
+  }
+
   CanvasState copyWith({
     List<IdentityLayer>? layers,
     RCanvas? canvas,
@@ -30,4 +36,9 @@ class CanvasState extends Equatable {
       selectedLayer: selectedLayer ?? this.selectedLayer,
     );
   }
+}
+
+extension LayerIdentificationExtension on IdentityLayer {
+  bool get isTextLayer => data is TextLayer;
+  bool get isImageLayer => data is ImageLayer;
 }

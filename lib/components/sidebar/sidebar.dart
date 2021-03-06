@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/image_picker.dart';
+import 'package:repaint/components/sidebar/editing_sidebar.dart';
 import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
 import 'package:repaint/models/layer/text.dart';
@@ -12,36 +13,60 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final cubit = context.watch<CanvasCubit>();
+    final state = cubit.state;
+    final isEditing = state.isInEditMode;
+
     return Container(
       height: double.maxFinite,
       width: 300,
       color: Colors.blueGrey.shade900,
-      child: Column(
+      child: SidebarPanel(
+        title: isEditing ? 'Edit Layer' : 'Elements',
         children: [
-          Container(
-            color: Color(0xFF202029),
-            height: 50,
-            width: double.maxFinite,
-            alignment: Alignment.center,
-            child: Text(
-              'Elements',
-              style: GoogleFonts.raleway(
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              children: [
-                TextLayers(),
-                ImageLayers(),
-              ],
-            ),
-          ),
+          if (!isEditing) ...[
+            TextLayers(),
+            ImageLayers(),
+          ] else
+            EditingSidebar(),
         ],
       ),
+    );
+  }
+}
+
+class SidebarPanel extends StatelessWidget {
+  const SidebarPanel({
+    Key? key,
+    required this.children,
+    required this.title,
+  }) : super(key: key);
+  final String title;
+  final List<Widget> children;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          color: Color(0xFF202029),
+          height: 50,
+          width: double.maxFinite,
+          alignment: Alignment.center,
+          child: Text(
+            title,
+            style: GoogleFonts.raleway(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            children: children,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -72,7 +97,7 @@ class TextLayers extends StatelessWidget {
     );
     final subheading = TextLayer(
       offset: Offset.zero,
-      size: Size(120, 30),
+      size: Size(120, 25),
       style: GoogleFonts.raleway(
         fontSize: 20,
         fontWeight: FontWeight.w600,

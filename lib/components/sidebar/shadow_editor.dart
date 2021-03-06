@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:repaint/application/cubit/canvas_cubit.dart';
-import 'package:repaint/application/utils/popup.dart';
 import 'package:repaint/widgets/color_picker.dart';
 import 'package:repaint/widgets/number_field.dart';
 

@@ -5,6 +5,7 @@ import 'layer.dart';
 class TextLayer extends RLayer {
   TextLayer({
     this.style,
+    this.align,
     required this.size,
     required this.offset,
     required this.text,
@@ -20,10 +21,11 @@ class TextLayer extends RLayer {
   final Size size;
 
   final TextStyle? style;
+  final TextAlign? align;
   final String text;
 
   @override
-  List<Object?> get props => [offset, opacity, text, style, size];
+  List<Object?> get props => [offset, opacity, text, style, size, align];
 
   TextLayer copyWith({
     Offset? offset,
@@ -31,12 +33,14 @@ class TextLayer extends RLayer {
     String? text,
     double? opacity,
     Size? size,
+    TextAlign? align,
   }) {
     return TextLayer(
       offset: offset ?? this.offset,
       style: style ?? this.style,
       text: text ?? this.text,
       size: size ?? this.size,
+      align: align ?? this.align,
     );
   }
 }

@@ -371,6 +371,7 @@ class _TextCanvasState extends State<TextCanvas> {
       child: Text(
         layer.text,
         style: layer.style,
+        textAlign: layer.align,
       ),
     );
 

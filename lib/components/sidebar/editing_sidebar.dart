@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repaint/components/sidebar/sidebar_heading.dart';
+import 'package:repaint/components/sidebar/text_align_editor.dart';
 import 'package:repaint/components/sidebar/text_content_editor.dart';
 import 'package:repaint/components/sidebar/text_font_editor.dart';
 import 'package:repaint/models/layer/layer.dart';
@@ -52,6 +53,10 @@ class TextLayerEditSidebar extends StatelessWidget {
         Divider(color: Colors.blueGrey.shade700),
         SizedBox(height: 5),
         TextFontEditor(),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 5),
+        TextAlignmentEditor(),
         SizedBox(height: 5),
         Divider(color: Colors.blueGrey.shade700)
       ],

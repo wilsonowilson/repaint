@@ -74,13 +74,12 @@ class _GestureCanvasState extends State<GestureCanvas> {
               scale: false,
               controller: controller,
               scaleController: scaleController,
-              child: Center(
-                child: ClipRect(
-                  child: CanvasComponent(
-                    canvasKey: canvasKey,
-                    effectiveCanvasSize: _effectiveCanvasSize,
-                    canvas: canvas,
-                  ),
+              child: ClipRect(
+                clipper: CustomRect(_effectiveCanvasSize),
+                child: CanvasComponent(
+                  canvasKey: canvasKey,
+                  effectiveCanvasSize: _effectiveCanvasSize,
+                  canvas: canvas,
                 ),
               ),
             ),
@@ -92,7 +91,7 @@ class _GestureCanvasState extends State<GestureCanvas> {
 
   Size _getEffectiveCanvasSize(RCanvas canvas) {
     final screenSize = MediaQuery.of(context).size;
-    final canvasSize = Size(canvas.width, canvas.height);
+    final canvasSize = Size(canvas.size.width, canvas.size.height);
 
     var scale = 1.0;
     final effectiveSize = Size(screenSize.width - 300, screenSize.height - 120);
@@ -102,7 +101,11 @@ class _GestureCanvasState extends State<GestureCanvas> {
       final ratioY = canvasSize.height / screenSize.height;
       scale = 0.8 / max(ratioX, ratioY);
     }
-    return canvasSize * scale;
+    final effectiveCanvasSize = canvasSize * scale;
+    context
+        .read<CanvasCubit>()
+        .editCanvas(canvas.copyWith(effectiveSize: effectiveCanvasSize));
+    return effectiveCanvasSize;
   }
 
   void _calculateTranslation(PointerSignalEvent event) {
@@ -114,8 +117,8 @@ class _GestureCanvasState extends State<GestureCanvas> {
       final dy = translation[1];
       final resolvedTranslation =
           Offset(dx - initialTranslation.dx, dy - initialTranslation.dy);
-      final maxTranslation =
-          initialTranslation + Offset(canvas.width / 6, canvas.height / 6);
+      final maxTranslation = initialTranslation +
+          Offset(canvas.size.width / 6, canvas.size.height / 6);
       var translationX = -delta.dx;
       var translationY = -delta.dy;
 
@@ -144,6 +147,23 @@ class _GestureCanvasState extends State<GestureCanvas> {
     final transX = (effectiveSize.width / 2) - (canvasSize.width / 2) * scale;
     initialTranslation = Offset(transX, transY);
     setState(() => controller.value.translate(transX, transY));
+  }
+}
+
+class CustomRect extends CustomClipper<Rect> {
+  final Size effectiveSize;
+
+  CustomRect(this.effectiveSize);
+  @override
+  Rect getClip(Size size) {
+    Rect rect =
+        Rect.fromLTRB(0.0, 0.0, effectiveSize.width, effectiveSize.height);
+    return rect;
+  }
+
+  @override
+  bool shouldReclip(CustomRect oldClipper) {
+    return false;
   }
 }
 
@@ -496,23 +516,3 @@ class Pill extends StatelessWidget {
     );
   }
 }
-
-  // takeScreenShot() async {
-  //   await Future.delayed(Duration(milliseconds: 2000));
-  //   final boundary =
-  //       canvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
-  //   ui.Image image = await boundary.toImage();
-
-  //   final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-  //   final pngBytes = byteData!.buffer.asUint8List();
-
-  //   FileSaver().saveAs(pngBytes, "untitled.png");
-  // }
-
-// class FileSaver {
-//   void saveAs(List<int> bytes, String fileName) =>
-//       js.context.callMethod("saveAs", [
-//         html.Blob([bytes]),
-//         fileName
-//       ]);
-// }

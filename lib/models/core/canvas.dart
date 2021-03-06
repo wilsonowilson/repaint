@@ -1,28 +1,29 @@
-import 'package:equatable/equatable.dart';
 import 'dart:ui';
+
+import 'package:equatable/equatable.dart';
 
 class RCanvas extends Equatable {
   RCanvas({
-    required this.width,
-    required this.height,
+    required this.size,
     required this.color,
+    this.effectiveSize,
   });
 
-  final double width;
-  final double height;
+  final Size size;
+  final Size? effectiveSize;
   final Color color;
 
   @override
-  List<Object> get props => [width, height, color];
+  List<Object?> get props => [size, effectiveSize, color];
 
   RCanvas copyWith({
-    double? width,
-    double? height,
+    Size? size,
+    Size? effectiveSize,
     Color? color,
   }) {
     return RCanvas(
-      width: width ?? this.width,
-      height: height ?? this.height,
+      size: size ?? this.size,
+      effectiveSize: effectiveSize ?? this.effectiveSize,
       color: color ?? this.color,
     );
   }

@@ -6,13 +6,12 @@ import 'package:repaint/components/sidebar.dart';
 import 'package:repaint/components/top_bar.dart';
 import 'package:repaint/models/core/canvas.dart';
 
-class CreatePage extends StatelessWidget {
+class CreatePage extends StatefulWidget {
   static Widget create(BuildContext context) {
     return BlocProvider(
       create: (context) => CanvasCubit(
         RCanvas(
-          width: 1080,
-          height: 2000,
+          size: Size(1080, 2000),
           color: Colors.white,
         ),
       ),
@@ -20,6 +19,13 @@ class CreatePage extends StatelessWidget {
     );
   }
 
+  @override
+  _CreatePageState createState() => _CreatePageState();
+}
+
+class _CreatePageState extends State<CreatePage> {
+  final GlobalKey repaintKey = GlobalKey();
+  final TransformationController controller = TransformationController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,9 +36,7 @@ class CreatePage extends StatelessWidget {
             child: Row(
               children: [
                 SideBar(),
-                Expanded(
-                  child: PaintingArea(),
-                ),
+                Expanded(child: PaintingArea()),
               ],
             ),
           )

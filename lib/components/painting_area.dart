@@ -256,33 +256,80 @@ class _ImageCanvasState extends State<ImageCanvas> {
     );
     return Transform.translate(
       offset: layer.offset,
-      child: SelectableComponent(
+      child: DraggableLayer(
         layer: widget.identityLayer,
-        isSelected: selected,
-        resizable: true,
-        focusNode: focusNode,
-        child: GestureDetector(
-          onTap: () {
-            if (!selected) {
-              cubit.selectLayer(widget.identityLayer);
-              focusNode.requestFocus();
-            } else {
-              cubit.deselectLayer();
-              focusNode.nextFocus();
-            }
-          },
-          child: Draggable<IdentityLayer>(
-            data: widget.identityLayer,
-            feedback: placeHolder,
-            childWhenDragging: Opacity(
-              opacity: 0.6,
-              child: placeHolder,
-            ),
+        child: SelectableComponent(
+          layer: widget.identityLayer,
+          isSelected: selected,
+          resizable: true,
+          focusNode: focusNode,
+          child: GestureDetector(
+            onTap: () {
+              if (!selected) {
+                cubit.selectLayer(widget.identityLayer);
+                focusNode.requestFocus();
+              } else {
+                cubit.deselectLayer();
+                focusNode.nextFocus();
+              }
+            },
             child: placeHolder,
           ),
         ),
       ),
     );
+  }
+}
+
+class DraggableLayer extends StatefulWidget {
+  const DraggableLayer({
+    Key? key,
+    required this.layer,
+    required this.child,
+  }) : super(key: key);
+
+  final IdentityLayer layer;
+  final Widget child;
+
+  @override
+  _DraggableLayerState createState() => _DraggableLayerState();
+}
+
+class _DraggableLayerState extends State<DraggableLayer> {
+  Offset newOffset = Offset.zero;
+  Offset startingPoint = Offset.zero;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onPanStart: _onPanStart,
+      onPanUpdate: _onPanUpdate,
+      onPanEnd: _onPanEnd,
+      child: Transform(
+        transform: Matrix4.identity()..translate(newOffset.dx, newOffset.dy),
+        alignment: Alignment.center,
+        child: widget.child,
+      ),
+    );
+  }
+
+  void _onPanStart(DragStartDetails details) {
+    startingPoint = details.localPosition;
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    newOffset = details.localPosition - startingPoint;
+    setState(() {});
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    final identityLayer = widget.layer;
+    final layer = identityLayer.data;
+    final newLayer = identityLayer.copyWith(
+      data: layer.copyWith(offset: layer.offset + newOffset),
+    );
+    context.read<CanvasCubit>().editLayer(newLayer);
+    newOffset = Offset.zero;
+    setState(() {});
   }
 }
 
@@ -301,12 +348,21 @@ class _TextCanvasState extends State<TextCanvas> {
   final focusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      focusNode.requestFocus();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final cubit = context.watch<CanvasCubit>();
     final state = cubit.state;
     final selected = state.selectedLayer.fold(() => null, (a) => a)?.id ==
         widget.identityLayer.id;
+
     final layer = widget.identityLayer.data as TextLayer;
 
     var placeHolder = Container(

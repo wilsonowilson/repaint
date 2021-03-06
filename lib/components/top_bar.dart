@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'dart:html' as html;
-import 'dart:js' as js;
+// import 'dart:html' as html;
+// import 'dart:js' as js;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -173,9 +173,10 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
 }
 
 class FileSaver {
-  void saveAs(List<int> bytes, String fileName) =>
-      js.context.callMethod("saveAs", <Object>[
-        html.Blob(<List<int>>[bytes]),
-        fileName
-      ]);
+  void saveAs(List<int> bytes, String fileName) {
+    // js.context.callMethod("saveAs", <Object>[
+    //   html.Blob(<List<int>>[bytes]),
+    //   fileName
+    // ]);
+  }
 }

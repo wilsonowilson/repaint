@@ -1,14 +1,10 @@
-import 'dart:typed_data';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
+import 'package:repaint/application/utils/image_picker.dart';
 import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
 import 'package:repaint/models/layer/text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universal_platform/universal_platform.dart';
-import 'package:file_selector/file_selector.dart';
 
 class LayerTargets extends StatelessWidget {
   const LayerTargets({
@@ -69,20 +65,7 @@ class LayerTargets extends StatelessWidget {
           );
           cubit.addLayer(layer);
         } else if (e.data is ImageLayer) {
-          Uint8List? bytes;
-          if (UniversalPlatform.isWeb) {
-            final result =
-                await FilePicker.platform.pickFiles(type: FileType.image);
-            if (result != null) {
-              bytes = result.files[0].bytes;
-            }
-          } else if (UniversalPlatform.isMacOS) {
-            final typeGroup =
-                XTypeGroup(label: 'images', extensions: ['jpg', 'png']);
-            final file = await openFile(acceptedTypeGroups: [typeGroup]);
-            final result = await file?.readAsBytes();
-            bytes = result;
-          }
+          final bytes = await ImagePicker.pickImage();
           if (bytes == null) return;
           final cubit = context.read<CanvasCubit>();
           final layer = (e.data as ImageLayer).copyWith(

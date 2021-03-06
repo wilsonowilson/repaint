@@ -103,6 +103,7 @@ class _TextSizeSelectorState extends State<TextSizeSelector> {
     8,
     12,
     16,
+    20,
     24,
     32,
     48,
@@ -194,7 +195,7 @@ class _TextFontSelectorState extends State<TextFontSelector> {
           .map(
             (e) => DropdownMenuItem<FontFamily>(
               value: e,
-              child: Text(e.name ?? '', style: e.style),
+              child: Text(e.name, style: e.style),
             ),
           )
           .toList(),
@@ -203,7 +204,7 @@ class _TextFontSelectorState extends State<TextFontSelector> {
 }
 
 class FontFamily {
-  final String? name;
+  final String name;
   final TextStyle style;
 
   FontFamily(this.name, this.style);
@@ -212,14 +213,17 @@ class FontFamily {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is FontFamily && o.name == name ||
-        (o as FontFamily).style.fontFamily == style.fontFamily;
+    return o is FontFamily &&
+        (o.name.contains(name) || o.style.fontFamily == style.fontFamily);
   }
 
   @override
   int get hashCode => name.hashCode ^ style.hashCode;
+
+  @override
+  String toString() => '$name';
 }
 
 extension FontFamilyExtension on TextStyle {
-  FontFamily get asFontFamily => FontFamily(fontFamily, this);
+  FontFamily get asFontFamily => FontFamily(fontFamily ?? '', this);
 }

@@ -7,11 +7,11 @@ import 'package:repaint/components/top_bar.dart';
 import 'package:repaint/models/core/canvas.dart';
 
 class CreatePage extends StatefulWidget {
-  static Widget create(BuildContext context) {
+  static Widget create(BuildContext context, Size canvasSize) {
     return BlocProvider(
       create: (context) => CanvasCubit(
         RCanvas(
-          size: Size(1080, 2000),
+          size: canvasSize,
           color: Colors.white,
         ),
       ),

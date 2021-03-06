@@ -98,7 +98,7 @@ class _GestureCanvasState extends State<GestureCanvas> {
         canvasSize.height > effectiveSize.height) {
       final ratioX = canvasSize.width / screenSize.width;
       final ratioY = canvasSize.height / screenSize.height;
-      scale = 0.8 / max(ratioX, ratioY);
+      scale = 0.75 / max(ratioX, ratioY);
     }
     final effectiveCanvasSize = canvasSize * scale;
     context

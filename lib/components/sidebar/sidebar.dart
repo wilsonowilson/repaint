@@ -79,12 +79,12 @@ class _SideBarState extends State<SideBar> {
                   PaintLayerTemplates(),
                 ],
               );
-            else if (settingsOpen)
-              return CanvasSettings();
-            else
+            else if (isEditing)
               return SingleChildScrollView(
                 child: EditingSidebar(),
               );
+            else if (settingsOpen) return CanvasSettings();
+            return SizedBox();
           }),
         ),
       ),

@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-// import 'dart:html' as html;
-// import 'dart:js' as js;
+
+// TODO: Will not compile on windows because of this
+import 'dart:html' as html;
+import 'dart:js' as js;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -121,34 +123,28 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 48.0),
-          child: Row(
+          child: Stack(
             children: [
-              Flexible(
-                flex: 1,
-                child: Center(
-                  child: IgnorePointer(
-                    child: PhysicalModel(
-                      color: Colors.transparent,
-                      shadowColor: Colors.black26,
-                      elevation: 10,
-                      child: RepaintBoundary(
-                        key: repaintKey,
-                        child: CanvasComponent(
-                          canvasKey: canvasKey,
-                          effectiveCanvasSize: effectiveCanvasSize,
-                          canvas: canvas,
-                        ),
+              Center(
+                child: IgnorePointer(
+                  child: ImageFiltered(
+                    imageFilter: ui.ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                    child: RepaintBoundary(
+                      key: repaintKey,
+                      child: CanvasComponent(
+                        canvasKey: canvasKey,
+                        effectiveCanvasSize: effectiveCanvasSize,
+                        canvas: canvas,
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 40),
-              Flexible(
-                flex: 1,
+              Container(color: Colors.white70),
+              Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
                       child: Text(
@@ -193,9 +189,9 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
 
 class FileSaver {
   void saveAs(List<int> bytes, String fileName) {
-    // js.context.callMethod("saveAs", <Object>[
-    //   html.Blob(<List<int>>[bytes]),
-    //   fileName
-    // ]);
+    js.context.callMethod("saveAs", <Object>[
+      html.Blob(<List<int>>[bytes]),
+      fileName
+    ]);
   }
 }

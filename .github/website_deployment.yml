@@ -1,0 +1,37 @@
+name: Website deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  demo-deploy:
+    timeout-minutes: 6
+    runs-on: ubuntu-latest
+    name: Repaint Demo
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v1.4.0
+        with:
+          channel: dev
+
+      - name: Build demo web app
+        run: |
+          flutter pub get
+          flutter config --enable-web
+          flutter build web --web-renderer canvaskit
+          cd build/web
+          touch ".nojekyll"
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build/web
+          GIT_CONFIG_NAME: wilsonowilson
+          GIT_CONFIG_EMAIL: wilsonwilsondev@gmail.com
+          COMMIT_MESSAGE: Deploy website

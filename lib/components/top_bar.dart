@@ -58,7 +58,7 @@ class TopBar extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () {
                   context.read<CanvasCubit>().deselectLayer();
-                  showDialog<Null>(
+                  showDialog<void>(
                     context: context,
                     builder: (_) => BlocProvider.value(
                       value: context.read<CanvasCubit>(),

@@ -17,7 +17,7 @@ class TextSizeEditor extends StatelessWidget {
       final layer = selectedLayer!.data as TextLayer;
 
       final editedLayer =
-          layer.copyWith(style: layer.style?.copyWith(fontSize: e));
+          layer.copyWith(style: layer.style.copyWith(fontSize: e));
       final newLayer = TextLayerHelper.applyHeightToLayer(editedLayer);
       context.read<CanvasCubit>().editLayer(
             selectedLayer.copyWith(
@@ -54,7 +54,7 @@ class TextSizeEditor extends StatelessWidget {
                   icon: Icon(Icons.remove_circle, size: 18),
                   onPressed: () {
                     final layer = selectedLayer?.data as TextLayer;
-                    final currentSize = layer.style?.fontSize ?? 14;
+                    final currentSize = layer.style.fontSize ?? 14;
                     _increaseTextSize(currentSize - 2);
                   },
                   color: Colors.white,
@@ -74,7 +74,7 @@ class TextSizeEditor extends StatelessWidget {
                           .toList();
                     },
                     child: Text(
-                      '${textLayer.style?.fontSize?.toInt()}px',
+                      '${textLayer.style.fontSize?.toInt()}px',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -86,7 +86,7 @@ class TextSizeEditor extends StatelessWidget {
                   icon: Icon(Icons.add_circle, size: 18),
                   onPressed: () {
                     final layer = selectedLayer?.data as TextLayer;
-                    final currentSize = layer.style?.fontSize ?? 14;
+                    final currentSize = layer.style.fontSize ?? 14;
                     _increaseTextSize(currentSize + 2);
                   },
                   color: Colors.white,

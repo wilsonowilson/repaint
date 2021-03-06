@@ -22,8 +22,7 @@ class TextWeightEditor extends StatelessWidget {
 
     final selectedWeight = _weights.firstWhere(
       (element) =>
-          element.weight ==
-          (selectedLayer?.data as TextLayer).style?.fontWeight,
+          element.weight == (selectedLayer?.data as TextLayer).style.fontWeight,
       orElse: () => _weights[1],
     );
 
@@ -46,7 +45,7 @@ class TextWeightEditor extends StatelessWidget {
             onSelected: (e) {
               final layer = selectedLayer!.data as TextLayer;
               final editedLayer = layer.copyWith(
-                  style: layer.style?.copyWith(fontWeight: e.weight));
+                  style: layer.style.copyWith(fontWeight: e.weight));
               final newLayer = TextLayerHelper.applyHeightToLayer(editedLayer);
               context.read<CanvasCubit>().editLayer(
                     selectedLayer.copyWith(

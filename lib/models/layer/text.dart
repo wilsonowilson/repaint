@@ -4,8 +4,8 @@ import 'layer.dart';
 
 class TextLayer extends RLayer {
   TextLayer({
-    this.style,
     this.align,
+    required this.style,
     required this.font,
     required this.size,
     required this.offset,
@@ -22,7 +22,7 @@ class TextLayer extends RLayer {
   final Size size;
   // Used to match google fonts
   final String font;
-  final TextStyle? style;
+  final TextStyle style;
   final TextAlign? align;
   final String text;
 

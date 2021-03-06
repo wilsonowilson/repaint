@@ -7,6 +7,7 @@ import 'package:repaint/components/sidebar/size_editor.dart';
 import 'package:repaint/components/sidebar/text_align_editor.dart';
 import 'package:repaint/components/sidebar/text_color_editor.dart';
 import 'package:repaint/components/sidebar/text_content_editor.dart';
+import 'package:repaint/components/sidebar/text_decoration_editor.dart';
 import 'package:repaint/components/sidebar/text_font_editor.dart';
 import 'package:repaint/components/sidebar/text_size_editor.dart';
 import 'package:repaint/components/sidebar/text_weight_editor.dart';
@@ -80,6 +81,9 @@ class TextLayerEditSidebar extends StatelessWidget {
         SizedBox(height: 5),
         Divider(color: Colors.blueGrey.shade700),
         TextWeightEditor(),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        TextDecorationEditor(),
         SizedBox(height: 5),
         Divider(color: Colors.blueGrey.shade700),
       ],

@@ -68,11 +68,12 @@ class TextFontEditor extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   selectFamily,
-                  style: (selectedLayer?.data as TextLayer).style?.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
+                  style: GoogleFonts.getFont(
+                    selectFamily,
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ),
               height: 35,

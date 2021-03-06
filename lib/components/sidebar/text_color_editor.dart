@@ -16,7 +16,7 @@ class TextColorEditor extends StatelessWidget {
     void changeColor(Color color) {
       final layer = selectedLayer!.data as TextLayer;
       final newLayer = layer.copyWith(
-        style: layer.style?.copyWith(color: color),
+        style: layer.style.copyWith(color: color),
       );
       context.read<CanvasCubit>().editLayer(
             selectedLayer.copyWith(
@@ -50,9 +50,8 @@ class TextColorEditor extends StatelessWidget {
                 ),
                 elevation: 0,
                 popup: RepaintColorPicker(
-                  pickerColor:
-                      (selectedLayer?.data as TextLayer).style?.color ??
-                          Colors.black,
+                  pickerColor: (selectedLayer?.data as TextLayer).style.color ??
+                      Colors.black,
                   onColorChanged: changeColor,
                 ),
               );
@@ -60,7 +59,7 @@ class TextColorEditor extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: (selectedLayer?.data as TextLayer).style?.color ??
+                color: (selectedLayer?.data as TextLayer).style.color ??
                     Colors.black,
                 border: Border.all(
                   color: Colors.blueGrey.shade800,

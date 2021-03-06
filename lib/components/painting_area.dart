@@ -76,13 +76,10 @@ class _GestureCanvasState extends State<GestureCanvas> {
               scale: false,
               controller: controller,
               scaleController: scaleController,
-              child: ClipRect(
-                clipper: CustomRect(_effectiveCanvasSize),
-                child: CanvasComponent(
-                  canvasKey: canvasKey,
-                  effectiveCanvasSize: _effectiveCanvasSize,
-                  canvas: canvas,
-                ),
+              child: CanvasComponent(
+                canvasKey: canvasKey,
+                effectiveCanvasSize: _effectiveCanvasSize,
+                canvas: canvas,
               ),
             ),
           ),
@@ -184,18 +181,21 @@ class CanvasComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      key: canvasKey,
-      children: [
-        Container(
-          width: _effectiveCanvasSize.width,
-          height: _effectiveCanvasSize.height,
-          decoration: BoxDecoration(
-            color: canvas.color,
+    return ClipRect(
+      clipper: CustomRect(_effectiveCanvasSize),
+      child: Stack(
+        key: canvasKey,
+        children: [
+          Container(
+            width: _effectiveCanvasSize.width,
+            height: _effectiveCanvasSize.height,
+            decoration: BoxDecoration(
+              color: canvas.color,
+            ),
           ),
-        ),
-        ..._getLayers(context),
-      ],
+          ..._getLayers(context),
+        ],
+      ),
     );
   }
 
@@ -464,7 +464,7 @@ class _PaintCanvasState extends State<PaintCanvas> {
           shape: layer.shape,
           borderRadius: layer.shape == BoxShape.circle
               ? null
-              : BorderRadius.circular(layer.borderRadius),
+              : BorderRadius.circular(layer.radius),
           boxShadow: [
             BoxShadow(
               offset: layer.shadow.offset,

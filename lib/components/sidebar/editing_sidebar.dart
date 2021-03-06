@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repaint/components/sidebar/image_editor.dart';
-import 'package:repaint/components/sidebar/image_radius_editor.dart';
+import 'package:repaint/components/sidebar/layer_radius_editor.dart';
+import 'package:repaint/components/sidebar/paint_color_editor.dart';
 import 'package:repaint/components/sidebar/position_editor.dart';
 import 'package:repaint/components/sidebar/shadow_editor.dart';
 import 'package:repaint/components/sidebar/sidebar_heading.dart';
@@ -15,6 +16,7 @@ import 'package:repaint/components/sidebar/text_font_editor.dart';
 import 'package:repaint/components/sidebar/text_size_editor.dart';
 import 'package:repaint/components/sidebar/text_weight_editor.dart';
 import 'package:repaint/models/layer/layer.dart';
+import 'package:repaint/models/layer/paint.dart';
 import 'package:repaint/models/layer/text.dart';
 
 class EditingSidebar extends StatelessWidget {
@@ -29,7 +31,7 @@ class EditingSidebar extends StatelessWidget {
           ? TextLayerEditSidebar(identityLayer: state.selectedOption)
           : state.selectedOption.isImageLayer
               ? ImageLayerEditSidebar(identityLayer: state.selectedOption)
-              : const SizedBox(),
+              : PaintLayerEditSidebar(identityLayer: state.selectedOption),
     );
   }
 }
@@ -135,8 +137,60 @@ class ImageLayerEditSidebar extends StatelessWidget {
         SizedBox(height: 15),
         LayerShadowEditor(),
         SizedBox(height: 5),
-        ImageRadiusEditor(),
+        LayerRadiusEditor(),
         SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 15),
+      ],
+    );
+  }
+}
+
+class PaintLayerEditSidebar extends StatelessWidget {
+  const PaintLayerEditSidebar({
+    Key? key,
+    required this.identityLayer,
+  }) : super(key: key);
+  final IdentityLayer identityLayer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SidebarHeading(
+          title: 'DIMENSIONS',
+          padding: 5,
+        ),
+        SizedBox(height: 15),
+        LayerPositionEditor(),
+        SizedBox(height: 15),
+        LayerSizeEditor(),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 15),
+        SidebarHeading(
+          title: 'DETAILS',
+          padding: 5,
+        ),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 5),
+        PaintColorEditor(),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 5),
+        if ((identityLayer.data as PaintLayer).shape == BoxShape.rectangle) ...[
+          LayerRadiusEditor(),
+          SizedBox(height: 5),
+          Divider(color: Colors.blueGrey.shade700),
+          SizedBox(height: 15),
+        ],
+        SidebarHeading(
+          title: 'SHADOW',
+          padding: 5,
+        ),
+        SizedBox(height: 15),
+        LayerShadowEditor(),
         Divider(color: Colors.blueGrey.shade700),
         SizedBox(height: 15),
       ],

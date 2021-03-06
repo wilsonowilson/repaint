@@ -223,14 +223,14 @@ class PaintLayerTemplates extends StatelessWidget {
       size: Size(200, 200),
       offset: Offset.zero,
       color: Colors.blue,
-      borderRadius: 0,
+      radius: 0,
     );
     final circlePaintLayer = PaintLayer(
       size: Size(200, 200),
       offset: Offset.zero,
       color: Colors.blue,
       shape: BoxShape.circle,
-      borderRadius: 0,
+      radius: 0,
     );
 
     return Column(

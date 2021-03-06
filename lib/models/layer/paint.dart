@@ -12,7 +12,7 @@ class PaintLayer extends RLayer {
     required this.size,
     required this.offset,
     required this.color,
-    required this.borderRadius,
+    required this.radius,
   });
 
   @override
@@ -31,7 +31,7 @@ class PaintLayer extends RLayer {
   @override
   final Shadow shadow;
 
-  final double borderRadius;
+  final double radius;
 
   final BoxShape shape;
 
@@ -43,7 +43,7 @@ class PaintLayer extends RLayer {
         color,
         clippingPath,
         shadow,
-        borderRadius,
+        radius,
         shape,
       ];
 
@@ -54,7 +54,7 @@ class PaintLayer extends RLayer {
     Path? clippingPath,
     double? opacity,
     Shadow? shadow,
-    double? borderRadius,
+    double? radius,
     BoxShape? shape,
   }) {
     return PaintLayer(
@@ -63,7 +63,7 @@ class PaintLayer extends RLayer {
       color: color ?? this.color,
       clippingPath: clippingPath ?? this.clippingPath,
       shadow: shadow ?? this.shadow,
-      borderRadius: borderRadius ?? this.borderRadius,
+      radius: radius ?? this.radius,
       shape: shape ?? this.shape,
     );
   }

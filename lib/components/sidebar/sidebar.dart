@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/image_picker.dart';
 import 'package:repaint/components/sidebar/editing_sidebar.dart';
+import 'package:repaint/components/sidebar/sidebar_heading.dart';
 import 'package:repaint/models/layer/image.dart';
 import 'package:repaint/models/layer/layer.dart';
 import 'package:repaint/models/layer/text.dart';
@@ -110,26 +111,7 @@ class TextLayers extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'TEXT',
-                style: GoogleFonts.raleway(
-                  color: Colors.white70,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Icon(
-                Icons.arrow_drop_down_rounded,
-                color: Colors.white70,
-              )
-            ],
-          ),
-        ),
+        SidebarHeading(title: 'TEXT'),
         const SizedBox(height: 8),
         _buildElementGrid([
           DraggableComponent(
@@ -177,26 +159,7 @@ class ImageLayers extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'IMAGES',
-                style: GoogleFonts.raleway(
-                  color: Colors.white70,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Icon(
-                Icons.arrow_drop_down_rounded,
-                color: Colors.white70,
-              )
-            ],
-          ),
-        ),
+        SidebarHeading(title: 'IMAGES'),
         const SizedBox(height: 8),
         _buildElementGrid([
           DraggableComponent(

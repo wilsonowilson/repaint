@@ -18,10 +18,13 @@ class TopBar extends StatelessWidget {
       width: double.maxFinite,
       height: 60,
       decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-        Color(0xff29f19c),
-        Color(0xff02a1f9),
-      ])),
+        gradient: LinearGradient(
+          colors: [
+            Color(0xff29f19c),
+            Color(0xff02a1f9),
+          ],
+        ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

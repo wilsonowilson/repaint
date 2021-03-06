@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repaint/components/sidebar/sidebar_heading.dart';
+import 'package:repaint/components/sidebar/size_editor.dart';
 import 'package:repaint/components/sidebar/text_align_editor.dart';
 import 'package:repaint/components/sidebar/text_content_editor.dart';
 import 'package:repaint/components/sidebar/text_font_editor.dart';
@@ -36,6 +37,12 @@ class TextLayerEditSidebar extends StatelessWidget {
     final layer = identityLayer.data as TextLayer;
     return Column(
       children: [
+        SidebarHeading(
+          title: 'DIMENSIONS',
+          padding: 5,
+        ),
+        SizedBox(height: 15),
+        LayerSizeEditor(),
         SidebarHeading(
           title: 'CONTENT',
           padding: 5,

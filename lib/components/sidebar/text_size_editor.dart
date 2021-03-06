@@ -63,6 +63,7 @@ class TextSizeEditor extends StatelessWidget {
                 Expanded(
                   child: PopupMenuButton<double>(
                     onSelected: _increaseTextSize,
+                    tooltip: 'Pick a Size',
                     itemBuilder: (e) {
                       return _avalaibleTextSizes
                           .map(
@@ -99,22 +100,6 @@ class TextSizeEditor extends StatelessWidget {
       ),
     );
   }
-}
-
-class TextAlignment {
-  TextAlignment(this.align, this.icon);
-  final IconData icon;
-  final TextAlign align;
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is TextAlignment && o.align == align;
-  }
-
-  @override
-  int get hashCode => icon.hashCode ^ align.hashCode;
 }
 
 const _avalaibleTextSizes = <double>[

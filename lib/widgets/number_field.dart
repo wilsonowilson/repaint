@@ -38,7 +38,7 @@ class NumberField extends StatelessWidget {
                 style:
                     TextStyle(color: Colors.white, fontSize: 18, fontFeatures: [
                   FontFeature.tabularFigures(),
-                  FontFeature.liningFigures(),
+                  // FontFeature.liningFigures(),
                 ]),
                 textAlign: TextAlign.center,
               ),

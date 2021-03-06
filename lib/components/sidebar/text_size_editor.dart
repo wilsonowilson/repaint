@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/text_layer_helper.dart';
 import 'package:repaint/models/layer/text.dart';
-import 'package:repaint/widgets/numerical_text_field.dart';
 
 class TextSizeEditor extends StatelessWidget {
   @override

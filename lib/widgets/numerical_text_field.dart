@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:repaint/models/layer/layer.dart';
 
 class NumericalTextField extends StatelessWidget {
   const NumericalTextField({

@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/popup.dart';
-import 'package:repaint/models/layer/layer.dart';
 import 'package:repaint/models/layer/text.dart';
 
 class TextColorEditor extends StatelessWidget {

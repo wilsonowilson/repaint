@@ -24,6 +24,17 @@ class SideBar extends StatelessWidget {
       color: Colors.blueGrey.shade900,
       child: SidebarPanel(
         title: isEditing ? 'Edit Layer' : 'Elements',
+        leading: isEditing
+            ? IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  cubit.deselectLayer();
+                },
+              )
+            : const SizedBox(),
         children: [
           if (!isEditing) ...[
             TextLayers(),
@@ -41,9 +52,11 @@ class SidebarPanel extends StatelessWidget {
     Key? key,
     required this.children,
     required this.title,
+    this.leading = const SizedBox(),
   }) : super(key: key);
   final String title;
   final List<Widget> children;
+  final Widget leading;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -52,13 +65,27 @@ class SidebarPanel extends StatelessWidget {
           color: Color(0xFF202029),
           height: 50,
           width: double.maxFinite,
+          padding: EdgeInsets.symmetric(horizontal: 15),
           alignment: Alignment.center,
-          child: Text(
-            title,
-            style: GoogleFonts.raleway(
-              color: Colors.white,
-              fontSize: 20,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              leading,
+              Text(
+                title,
+                style: GoogleFonts.raleway(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              IgnorePointer(
+                ignoring: true,
+                child: Opacity(
+                  opacity: 0,
+                  child: leading,
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(

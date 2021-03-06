@@ -6,6 +6,7 @@ class TextLayer extends RLayer {
   TextLayer({
     this.style,
     this.align,
+    required this.font,
     required this.size,
     required this.offset,
     required this.text,
@@ -19,13 +20,14 @@ class TextLayer extends RLayer {
 
   @override
   final Size size;
-
+  // Used to match google fonts
+  final String font;
   final TextStyle? style;
   final TextAlign? align;
   final String text;
 
   @override
-  List<Object?> get props => [offset, opacity, text, style, size, align];
+  List<Object?> get props => [offset, opacity, text, style, size, align, font];
 
   TextLayer copyWith({
     Offset? offset,
@@ -34,6 +36,7 @@ class TextLayer extends RLayer {
     double? opacity,
     Size? size,
     TextAlign? align,
+    String? font,
   }) {
     return TextLayer(
       offset: offset ?? this.offset,
@@ -41,6 +44,19 @@ class TextLayer extends RLayer {
       text: text ?? this.text,
       size: size ?? this.size,
       align: align ?? this.align,
+      font: font ?? this.font,
     );
   }
 }
+
+const availableFonts = <String>[
+  'Raleway',
+  'Montserrat',
+  'Roboto',
+  'Playfair Display',
+  'Lobster',
+  'Oswald',
+  'Abril Fatface',
+  'Roboto Condensed',
+  'Merriweather',
+];

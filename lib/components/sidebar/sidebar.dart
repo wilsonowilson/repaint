@@ -80,26 +80,29 @@ class TextLayers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bodyText = TextLayer(
+      font: availableFonts[0],
       offset: Offset(0, 0),
       size: Size(220, 40),
-      style: GoogleFonts.raleway(
+      style: TextStyle(
         fontSize: 16,
       ),
       text: 'Lorem ipsum dolor sit amet consecteur adespising',
     );
     final headingText = TextLayer(
+      font: availableFonts[0],
       offset: Offset.zero,
       size: Size(150, 40),
-      style: GoogleFonts.raleway(
+      style: TextStyle(
         fontSize: 32,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
       ),
       text: 'Heading',
     );
     final subheading = TextLayer(
+      font: availableFonts[0],
       offset: Offset.zero,
       size: Size(120, 25),
-      style: GoogleFonts.raleway(
+      style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),

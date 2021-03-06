@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/text_layer_helper.dart';
 import 'package:repaint/models/layer/text.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TextFontEditor extends StatelessWidget {
+class TextWeightEditor extends StatelessWidget {
+  static final _weights = <Weight>[
+    Weight('Light', FontWeight.w200),
+    Weight('Regular', FontWeight.normal),
+    Weight('Bold', FontWeight.bold),
+    Weight('Black', FontWeight.w900),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.watch<CanvasCubit>();
     final state = cubit.state;
     final selectedLayer = state.selectedLayer.fold(() => null, (a) => a);
-    final selectFamily = availableFonts
-        .where(
-          (element) => (selectedLayer?.data as TextLayer).font == element,
-        )
-        .first;
+
+    final selectedWeight = _weights.firstWhere(
+      (element) =>
+          element.weight ==
+          (selectedLayer?.data as TextLayer).style?.fontWeight,
+      orElse: () => _weights[1],
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5),
@@ -24,18 +34,19 @@ class TextFontEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Font Family',
+            'Font Weight',
             style: GoogleFonts.raleway(
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
-          PopupMenuButton<String>(
-            tooltip: 'Pick a Font',
+          PopupMenuButton<Weight>(
+            tooltip: 'Pick a Weight',
             onSelected: (e) {
               final layer = selectedLayer!.data as TextLayer;
-              final editedLayer = layer.copyWith(font: e);
+              final editedLayer = layer.copyWith(
+                  style: layer.style?.copyWith(fontWeight: e.weight));
               final newLayer = TextLayerHelper.applyHeightToLayer(editedLayer);
               context.read<CanvasCubit>().editLayer(
                     selectedLayer.copyWith(
@@ -44,15 +55,12 @@ class TextFontEditor extends StatelessWidget {
                   );
             },
             itemBuilder: (e) {
-              final items = availableFonts
+              final items = _weights
                   .map(
-                    (e) => PopupMenuItem<String>(
+                    (e) => PopupMenuItem(
                       height: 30,
                       value: e,
-                      child: Text(
-                        e,
-                        style: GoogleFonts.getFont(e),
-                      ),
+                      child: Center(child: Text(e.name)),
                     ),
                   )
                   .toList();
@@ -64,15 +72,12 @@ class TextFontEditor extends StatelessWidget {
                   border: Border.all(
                     color: Colors.blueGrey.shade800,
                   )),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  selectFamily,
-                  style: (selectedLayer?.data as TextLayer).style?.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
+              alignment: Alignment.center,
+              child: Text(
+                selectedWeight.name,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: selectedWeight.weight,
                 ),
               ),
               height: 35,
@@ -85,28 +90,8 @@ class TextFontEditor extends StatelessWidget {
   }
 }
 
-class FontFamily {
+class Weight {
+  Weight(this.name, this.weight);
   final String name;
-  final TextStyle style;
-
-  FontFamily(this.name, this.style);
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is FontFamily &&
-        ((o.name.contains(name) || name.contains(o.name)) ||
-            o.style.fontFamily == style.fontFamily);
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ style.hashCode;
-
-  @override
-  String toString() => '$name';
-}
-
-extension FontFamilyExtension on TextStyle {
-  FontFamily get asFontFamily => FontFamily(this.fontFamily ?? '', this);
+  final FontWeight weight;
 }

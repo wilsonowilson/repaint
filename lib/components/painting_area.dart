@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/components/layer_targets.dart';
 import 'package:repaint/models/core/canvas.dart';
@@ -364,13 +365,17 @@ class _TextCanvasState extends State<TextCanvas> {
         widget.identityLayer.id;
 
     final layer = widget.identityLayer.data as TextLayer;
-
     var placeHolder = Container(
       width: layer.size.width,
       height: layer.size.height,
       child: Text(
         layer.text,
-        style: layer.style,
+        style: GoogleFonts.getFont(
+          layer.font,
+          fontWeight: layer.style?.fontWeight,
+          fontSize: layer.style?.fontSize,
+          color: layer.style?.color,
+        ),
         textAlign: layer.align,
       ),
     );

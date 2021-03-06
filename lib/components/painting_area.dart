@@ -254,6 +254,7 @@ class _ImageCanvasState extends State<ImageCanvas> {
             offset: layer.shadow.offset,
           ),
         ],
+        borderRadius: BorderRadius.circular(layer.radius),
         image: DecorationImage(
           fit: BoxFit.cover,
           image: MemoryImage(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repaint/components/sidebar/image_radius_editor.dart';
 import 'package:repaint/components/sidebar/position_editor.dart';
 import 'package:repaint/components/sidebar/shadow_editor.dart';
 import 'package:repaint/components/sidebar/sidebar_heading.dart';
@@ -123,50 +124,19 @@ class ImageLayerEditSidebar extends StatelessWidget {
         LayerPositionEditor(),
         SizedBox(height: 15),
         LayerSizeEditor(),
-        // SizedBox(height: 15),
-        // SidebarHeading(
-        //   title: 'CONTENT',
-        //   padding: 5,
-        // ),
-        // SizedBox(height: 15),
-        // TextContentEditor(
-        //   layer: layer,
-        //   identityLayer: identityLayer,
-        // ),
-        // SizedBox(height: 25),
-        // SidebarHeading(
-        //   title: 'STYLE',
-        //   padding: 5,
-        // ),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // SizedBox(height: 5),
-        // TextFontEditor(),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // SizedBox(height: 5),
-        // TextColorEditor(),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // TextAlignmentEditor(),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // TextSizeEditor(),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // TextWeightEditor(),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // TextDecorationEditor(),
-        // SizedBox(height: 5),
-        // Divider(color: Colors.blueGrey.shade700),
-        // SizedBox(height: 15),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 15),
         SidebarHeading(
           title: 'SHADOW',
           padding: 5,
         ),
         SizedBox(height: 15),
         LayerShadowEditor(),
+        SizedBox(height: 5),
+        ImageRadiusEditor(),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
         SizedBox(height: 15),
       ],
     );

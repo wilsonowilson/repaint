@@ -8,6 +8,7 @@ class ImageLayer extends RLayer {
     this.data,
     required this.size,
     required this.offset,
+    this.radius = 0,
     this.shadow = const Shadow(),
   });
 
@@ -25,8 +26,10 @@ class ImageLayer extends RLayer {
   @override
   final Shadow shadow;
 
+  final double radius;
+
   @override
-  List<Object?> get props => [offset, opacity, data, size, shadow];
+  List<Object?> get props => [offset, opacity, data, size, shadow, radius];
 
   ImageLayer copyWith({
     Offset? offset,
@@ -34,12 +37,14 @@ class ImageLayer extends RLayer {
     double? opacity,
     Uint8List? data,
     Shadow? shadow,
+    double? radius,
   }) {
     return ImageLayer(
       offset: offset ?? this.offset,
       data: data ?? this.data,
       size: size ?? this.size,
       shadow: shadow ?? this.shadow,
+      radius: radius ?? this.radius,
     );
   }
 }

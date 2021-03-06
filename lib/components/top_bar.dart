@@ -28,9 +28,25 @@ class TopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: Navigator.of(context).pop,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                  ),
+                  onPressed: Navigator.of(context).pop,
+                ),
+              ),
+              Text(
+                'Repaint',
+                style: GoogleFonts.lobster(
+                  fontSize: 30,
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.only(right: 28.0),

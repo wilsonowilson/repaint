@@ -101,32 +101,25 @@ class LayerShadowEditor extends StatelessWidget {
           ),
           Divider(color: Colors.blueGrey.shade800),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  'BLUR RADIUS',
-                  style: GoogleFonts.raleway(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
+              Text(
+                'BLUR RADIUS',
+                style: GoogleFonts.raleway(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(width: 55),
-              Expanded(
-                child: NumberField(
-                  updateValue: 0.1,
-                  text:
-                      actualLayer?.shadow.blurRadius.toStringAsFixed(2) ?? '0',
-                  onValue: (e) {
-                    _updateShadowBlurRadius(
-                      (actualLayer?.shadow.blurRadius ?? 0) + e,
-                    );
-                  },
-                ),
+              NumberField(
+                updateValue: 0.1,
+                text: actualLayer?.shadow.blurRadius.toStringAsFixed(1) ?? '0',
+                onValue: (e) {
+                  _updateShadowBlurRadius(
+                    (actualLayer?.shadow.blurRadius ?? 0) + e,
+                  );
+                },
               ),
             ],
           ),
@@ -145,22 +138,9 @@ class LayerShadowEditor extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    showPopup<Null>(
-                      context: context,
-                      anchor: Anchor(
-                        source: Alignment.bottomRight,
-                        target: Alignment.topRight,
-                        offset: Offset(120, 0),
-                      ),
-                      elevation: 0,
-                      popup: RepaintColorPicker(
-                        pickerColor: actualLayer?.shadow.color ?? Colors.black,
-                        onColorChanged: changeColor,
-                      ),
-                    );
-                  },
+                RepaintColorPicker(
+                  pickerColor: actualLayer?.shadow.color ?? Colors.black,
+                  onColorChanged: changeColor,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),

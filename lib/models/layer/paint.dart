@@ -46,6 +46,8 @@ class PaintLayer extends RLayer {
         radius,
         shape,
       ];
+  @override
+  String toString() => shape == BoxShape.rectangle ? 'Rectangle' : 'Circle';
 
   PaintLayer copyWith({
     Offset? offset,

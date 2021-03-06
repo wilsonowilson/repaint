@@ -32,7 +32,7 @@ class NumberField extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 18.0),
+              padding: const EdgeInsets.only(left: 18.0, right: 18.0),
               child: Text(
                 text,
                 style:

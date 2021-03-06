@@ -14,8 +14,10 @@ class LayerRadiusEditor extends StatelessWidget {
     final selectedLayer = state.selectedLayer.fold(() => null, (a) => a);
     final layer = selectedLayer!.data;
     assert(layer is PaintLayer || layer is ImageLayer);
-    if ((layer as PaintLayer).shape == BoxShape.circle)
-      assert(false, 'Circles can\'t have radiuses');
+    if (layer is PaintLayer) {
+      if (layer.shape == BoxShape.circle)
+        assert(false, 'Circles can\'t have radiuses');
+    }
 
     void updateBorderRadius(double e) {
       if (layer is ImageLayer) {
@@ -65,7 +67,7 @@ class LayerRadiusEditor extends StatelessWidget {
           SizedBox(width: 70),
           Expanded(
             child: NumberField(
-              text: radius.toStringAsFixed(2),
+              text: radius.toStringAsFixed(1),
               onValue: (e) {
                 updateBorderRadius(
                   radius + e,

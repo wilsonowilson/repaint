@@ -28,6 +28,19 @@ class CanvasCubit extends Cubit<CanvasState> {
     ));
   }
 
+  void reorderLayers(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final layers = state.layers.toList();
+    final newLayer = layers[oldIndex];
+    layers.removeAt(oldIndex);
+    layers.insert(newIndex, newLayer);
+    emit(
+      state.copyWith(layers: layers),
+    );
+  }
+
   void editLayer(IdentityLayer layer) {
     final layers = state.layers.toList();
     final current = layers.firstWhere((element) => element.id == layer.id);

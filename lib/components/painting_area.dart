@@ -466,11 +466,12 @@ class _PaintCanvasState extends State<PaintCanvas> {
               ? null
               : BorderRadius.circular(layer.radius),
           boxShadow: [
-            BoxShadow(
-              offset: layer.shadow.offset,
-              blurRadius: layer.shadow.blurRadius,
-              color: layer.shadow.color,
-            ),
+            if (layer.shadow.blurRadius != 0)
+              BoxShadow(
+                offset: layer.shadow.offset,
+                blurRadius: layer.shadow.blurRadius,
+                color: layer.shadow.color,
+              ),
           ]),
     );
 

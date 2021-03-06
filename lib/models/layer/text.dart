@@ -65,6 +65,11 @@ class TextLayer extends RLayer {
       shadow: shadow ?? this.shadow,
     );
   }
+
+  @override
+  String toString() {
+    return '$text';
+  }
 }
 
 const availableFonts = <String>[

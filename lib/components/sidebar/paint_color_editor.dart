@@ -38,22 +38,9 @@ class PaintColorEditor extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              showPopup<Null>(
-                context: context,
-                anchor: Anchor(
-                  source: Alignment.bottomRight,
-                  target: Alignment.topRight,
-                  offset: Offset(120, 0),
-                ),
-                elevation: 0,
-                popup: RepaintColorPicker(
-                  pickerColor: (selectedLayer?.data as PaintLayer).color,
-                  onColorChanged: changeColor,
-                ),
-              );
-            },
+          RepaintColorPicker(
+            pickerColor: (selectedLayer?.data as PaintLayer).color,
+            onColorChanged: changeColor,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),

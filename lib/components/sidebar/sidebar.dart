@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:layout/layout.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/application/utils/image_picker.dart';
 import 'package:repaint/components/sidebar/editing_sidebar.dart';
@@ -12,7 +13,16 @@ import 'package:repaint/models/layer/paint.dart';
 import 'package:repaint/models/layer/text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SideBar extends StatelessWidget {
+import 'canvas_color_editor.dart';
+
+class SideBar extends StatefulWidget {
+  @override
+  _SideBarState createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
+  bool settingsOpen = false;
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.watch<CanvasCubit>();
@@ -25,26 +35,111 @@ class SideBar extends StatelessWidget {
       color: Colors.blueGrey.shade900,
       child: SidebarPanel(
         title: isEditing ? 'Edit Layer' : 'Elements',
-        leading: isEditing
-            ? IconButton(
+        leading: Builder(
+          builder: (context) {
+            if (isEditing || settingsOpen)
+              return IconButton(
                 icon: Icon(
                   Icons.close,
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  cubit.deselectLayer();
+                  if (isEditing)
+                    cubit.deselectLayer();
+                  else
+                    setState(() {
+                      settingsOpen = false;
+                    });
                 },
-              )
-            : const SizedBox(),
-        children: [
-          if (!isEditing) ...[
-            TextLayerTemplates(),
-            ImageLayerTemplates(),
-            PaintLayerTemplates(),
-          ] else
-            EditingSidebar(),
-        ],
+              );
+            if (!settingsOpen)
+              return IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    settingsOpen = true;
+                  });
+                },
+              );
+
+            return const SizedBox();
+          },
+        ),
+        child: Margin(
+          margin: EdgeInsets.symmetric(horizontal: 12),
+          child: Builder(builder: (context) {
+            if (!isEditing && !settingsOpen)
+              return ListView(
+                children: [
+                  TextLayerTemplates(),
+                  ImageLayerTemplates(),
+                  PaintLayerTemplates(),
+                ],
+              );
+            else if (settingsOpen)
+              return CanvasSettings();
+            else
+              return SingleChildScrollView(
+                child: EditingSidebar(),
+              );
+          }),
+        ),
       ),
+    );
+  }
+}
+
+class CanvasSettings extends StatefulWidget {
+  @override
+  _CanvasSettingsState createState() => _CanvasSettingsState();
+}
+
+class _CanvasSettingsState extends State<CanvasSettings> {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<CanvasCubit>();
+    final layers = cubit.state.layers;
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        CanvasColorEditor(),
+        SizedBox(height: 5),
+        Divider(color: Colors.blueGrey.shade700),
+        SizedBox(height: 10),
+        Expanded(
+          child: ReorderableListView(
+            buildDefaultDragHandles: false,
+            proxyDecorator: (e, _, __) {
+              return SizedBox(
+                child: e,
+              );
+            },
+            children: layers.map((layer) {
+              final index = layers.indexOf(layer);
+              return ReorderableDragStartListener(
+                key: ValueKey(layer.id),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 3.0),
+                  child: ListTile(
+                    tileColor: Colors.blueGrey.shade800,
+                    title: Text(
+                      layer.data.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                index: index,
+              );
+            }).toList(),
+            onReorder: (e, f) => cubit.reorderLayers(e, f),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -52,12 +147,12 @@ class SideBar extends StatelessWidget {
 class SidebarPanel extends StatelessWidget {
   const SidebarPanel({
     Key? key,
-    required this.children,
+    required this.child,
     required this.title,
     this.leading = const SizedBox(),
   }) : super(key: key);
   final String title;
-  final List<Widget> children;
+  final Widget child;
   final Widget leading;
   @override
   Widget build(BuildContext context) {
@@ -91,13 +186,16 @@ class SidebarPanel extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Scrollbar(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              children: children,
-            ),
-          ),
+          child: child,
         ),
+        // Expanded(
+        //   child: Scrollbar(
+        //     child: ListView(
+        //       padding: EdgeInsets.symmetric(horizontal: 10),
+        //       children: children,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -301,10 +399,10 @@ class DraggableComponent extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              height: 37,
+              height: 27,
               child: Icon(
                 icon,
-                size: iconSize ?? 37,
+                size: iconSize ?? 27,
                 color: Colors.white54,
               ),
             ),

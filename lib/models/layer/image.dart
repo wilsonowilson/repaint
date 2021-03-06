@@ -47,4 +47,9 @@ class ImageLayer extends RLayer {
       radius: radius ?? this.radius,
     );
   }
+
+  @override
+  String toString() {
+    return 'Image';
+  }
 }

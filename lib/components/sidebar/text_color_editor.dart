@@ -39,23 +39,10 @@ class TextColorEditor extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              showPopup<Null>(
-                context: context,
-                anchor: Anchor(
-                  source: Alignment.bottomRight,
-                  target: Alignment.topRight,
-                  offset: Offset(120, 0),
-                ),
-                elevation: 0,
-                popup: RepaintColorPicker(
-                  pickerColor: (selectedLayer?.data as TextLayer).style.color ??
-                      Colors.black,
-                  onColorChanged: changeColor,
-                ),
-              );
-            },
+          RepaintColorPicker(
+            pickerColor:
+                (selectedLayer?.data as TextLayer).style.color ?? Colors.black,
+            onColorChanged: changeColor,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),

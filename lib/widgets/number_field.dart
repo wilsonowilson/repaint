@@ -78,7 +78,7 @@ class _NumberIncrementerState extends State<NumberIncrementer> {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              widget.onIncrement(5);
+              widget.onIncrement(1);
             },
             onTapDown: (TapDownDetails details) {
               timer = Timer.periodic(Duration(milliseconds: 20), (t) {
@@ -103,7 +103,7 @@ class _NumberIncrementerState extends State<NumberIncrementer> {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              widget.onIncrement(-5);
+              widget.onIncrement(-1);
             },
             onTapDown: (TapDownDetails details) {
               timer = Timer.periodic(Duration(milliseconds: 50), (t) {

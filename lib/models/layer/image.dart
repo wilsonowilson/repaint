@@ -26,7 +26,7 @@ class ImageLayer extends RLayer {
   final Shadow shadow;
 
   @override
-  List<Object?> get props => [offset, opacity, data, size];
+  List<Object?> get props => [offset, opacity, data, size, shadow];
 
   ImageLayer copyWith({
     Offset? offset,

@@ -12,7 +12,7 @@ class LayerShadowEditor extends StatelessWidget {
     final cubit = context.watch<CanvasCubit>();
     final state = cubit.state;
     final selectedLayer = state.selectedLayer.fold(() => null, (a) => a);
-    final textLayer = selectedLayer?.data;
+    final actualLayer = selectedLayer?.data;
 
     void _updateShadowOffset(Offset e) {
       final layer = selectedLayer!.data;
@@ -24,18 +24,9 @@ class LayerShadowEditor extends StatelessWidget {
           );
     }
 
-    void _updateShadowColor(Color e) {
-      final layer = selectedLayer!.data;
-      final editedLayer = layer.copyWith(
-        shadow: layer.shadow.copyWith(color: e),
-      );
-      context.read<CanvasCubit>().editLayer(
-            selectedLayer.copyWith(data: editedLayer),
-          );
-    }
-
     void _updateShadowBlurRadius(double e) {
       final layer = selectedLayer!.data;
+      if (layer.shadow.blurRadius <= 0.1 && e.isNegative) e = 0;
       final editedLayer = layer.copyWith(
         shadow: layer.shadow.copyWith(blurRadius: e),
       );
@@ -45,8 +36,8 @@ class LayerShadowEditor extends StatelessWidget {
     }
 
     void changeColor(Color color) {
-      final newLayer = textLayer?.copyWith(
-        shadow: textLayer.shadow.copyWith(color: color),
+      final newLayer = actualLayer?.copyWith(
+        shadow: actualLayer.shadow.copyWith(color: color),
       );
       context.read<CanvasCubit>().editLayer(
             selectedLayer!.copyWith(
@@ -75,10 +66,11 @@ class LayerShadowEditor extends StatelessWidget {
               ),
               Expanded(
                 child: NumberField(
-                  text: textLayer?.shadow.offset.dx.toInt().toString() ?? '0',
+                  text: actualLayer?.shadow.offset.dx.toInt().toString() ?? '0',
                   onValue: (e) {
                     _updateShadowOffset(
-                      (textLayer?.shadow.offset ?? Offset.zero) + Offset(e, 0),
+                      (actualLayer?.shadow.offset ?? Offset.zero) +
+                          Offset(e, 0),
                     );
                   },
                 ),
@@ -95,10 +87,11 @@ class LayerShadowEditor extends StatelessWidget {
               ),
               Expanded(
                 child: NumberField(
-                  text: textLayer?.shadow.offset.dy.toInt().toString() ?? '',
+                  text: actualLayer?.shadow.offset.dy.toInt().toString() ?? '',
                   onValue: (e) {
                     _updateShadowOffset(
-                      (textLayer?.shadow.offset ?? Offset.zero) + Offset(0, e),
+                      (actualLayer?.shadow.offset ?? Offset.zero) +
+                          Offset(0, e),
                     );
                   },
                 ),
@@ -124,10 +117,11 @@ class LayerShadowEditor extends StatelessWidget {
               Expanded(
                 child: NumberField(
                   updateValue: 0.1,
-                  text: textLayer?.shadow.blurRadius.toStringAsFixed(2) ?? '0',
+                  text:
+                      actualLayer?.shadow.blurRadius.toStringAsFixed(2) ?? '0',
                   onValue: (e) {
                     _updateShadowBlurRadius(
-                      (textLayer?.shadow.blurRadius ?? 0) + e,
+                      (actualLayer?.shadow.blurRadius ?? 0) + e,
                     );
                   },
                 ),
@@ -160,7 +154,7 @@ class LayerShadowEditor extends StatelessWidget {
                       ),
                       elevation: 0,
                       popup: RepaintColorPicker(
-                        pickerColor: textLayer?.shadow.color ?? Colors.black,
+                        pickerColor: actualLayer?.shadow.color ?? Colors.black,
                         onColorChanged: changeColor,
                       ),
                     );
@@ -168,7 +162,7 @@ class LayerShadowEditor extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: textLayer?.shadow.color ?? Colors.black,
+                      color: actualLayer?.shadow.color ?? Colors.black,
                       border: Border.all(
                         color: Colors.blueGrey.shade800,
                       ),

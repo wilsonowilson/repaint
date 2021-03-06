@@ -247,6 +247,13 @@ class _ImageCanvasState extends State<ImageCanvas> {
       width: layer.size.width,
       height: layer.size.height,
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            blurRadius: layer.shadow.blurRadius,
+            color: layer.shadow.color,
+            offset: layer.shadow.offset,
+          ),
+        ],
         image: DecorationImage(
           fit: BoxFit.cover,
           image: MemoryImage(

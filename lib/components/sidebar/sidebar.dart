@@ -37,8 +37,8 @@ class SideBar extends StatelessWidget {
             : const SizedBox(),
         children: [
           if (!isEditing) ...[
-            TextLayers(),
-            ImageLayers(),
+            TextLayerTemplates(),
+            ImageLayerTemplates(),
           ] else
             EditingSidebar(),
         ],
@@ -101,8 +101,8 @@ class SidebarPanel extends StatelessWidget {
   }
 }
 
-class TextLayers extends StatelessWidget {
-  const TextLayers({
+class TextLayerTemplates extends StatelessWidget {
+  const TextLayerTemplates({
     Key? key,
   }) : super(key: key);
 
@@ -169,8 +169,8 @@ class TextLayers extends StatelessWidget {
   }
 }
 
-class ImageLayers extends StatelessWidget {
-  const ImageLayers({
+class ImageLayerTemplates extends StatelessWidget {
+  const ImageLayerTemplates({
     Key? key,
   }) : super(key: key);
 

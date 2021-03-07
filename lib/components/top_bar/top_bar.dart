@@ -2,16 +2,16 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-// TODO: Will not compile on windows because of this
-import 'dart:html' as html;
-import 'dart:js' as js;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/components/painting_area.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repaint/components/top_bar/file_saver.dart'
+    if (dart.library.html) 'package:repaint/components/top_bar/file_saver_web.dart'
+    as web;
 
 class TopBar extends StatelessWidget {
   @override
@@ -184,15 +184,6 @@ class _ScreenshotWidgetState extends State<ScreenshotWidget> {
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-    FileSaver().saveAs(pngBytes, "repaint.png");
-  }
-}
-
-class FileSaver {
-  void saveAs(List<int> bytes, String fileName) {
-    js.context.callMethod("saveAs", <Object>[
-      html.Blob(<List<int>>[bytes]),
-      fileName
-    ]);
+    web.FileSaver().saveAs(pngBytes, "repaint.png");
   }
 }

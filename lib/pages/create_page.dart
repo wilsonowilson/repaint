@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repaint/application/cubit/canvas_cubit.dart';
 import 'package:repaint/components/painting_area.dart';
 import 'package:repaint/components/sidebar/sidebar.dart';
-import 'package:repaint/components/top_bar.dart';
+import 'package:repaint/components/top_bar/top_bar.dart';
 import 'package:repaint/models/core/canvas.dart';
 
 class CreatePage extends StatefulWidget {
